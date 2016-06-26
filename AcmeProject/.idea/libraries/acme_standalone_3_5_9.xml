@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="acme.standalone-3.5.9">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../AcmeLib-3.5.9-20150126/lib/acme.standalone-3.5.9.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
