@@ -49,7 +49,7 @@ public class Server {
             JSONObject jObject = new JSONObject(buf.toString());
 
             //Thread t1 = new Thread(() -> {
-                model.createTopicList(jObject.getJSONArray("topics"));
+                model.createTopicList(jObject.get("topics").toString());
            // });
 //            t1.start();
 

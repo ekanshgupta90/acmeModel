@@ -55,10 +55,8 @@ public class Model {
         for (Topic topic : topicArrayList) {
             Connector connector = new Connector(system, topic.getName());
             connector.addStringTypeProperty("name", topic.getName().substring(0, topic.getName().length()-5).replace("__", "/"));
-            //connector.addAdvertiserRole("ROSTopicAdvertiserRoleT0");
-            //connector.addSubscriberRole("ROSTopicSubscriberRoleT0");
-            //connector.addStringTypeProperty("msg_type", "msgs/odometry.msg");
-//            System.out.println(connector.getName());
+            connector.addStringTypeProperty("msg_type", topic.getMsg_Type());
+//          System.out.println(connector.getName());
             connectorArrayList.add(connector);
         }
 
@@ -76,6 +74,8 @@ public class Model {
             for (Topic topic : subscribedTopics) {
                 component.addSubscriberPort("sport" + portNumber);
                 IAcmePort port = component.getPort("sport" + portNumber);
+                String msg_type = null;
+                String topicName = null;
                 for (Connector connector : connectorArrayList) {
                     if (connector.getName() == topic.getName()) {
 
@@ -90,9 +90,12 @@ public class Model {
                         } catch (AcmeException e) {
                             e.printStackTrace();
                         }
+                        msg_type = topic.getMsg_Type();
+                        topicName = topic.getName().substring(0, topic.getName().length()-5).replace("__", "/");
                     }
                 }
-                //component.addStringTypePropertytoPort("sport" + portNumber, "msg_type", "msg/odometety.msg");
+                component.addStringTypePropertytoPort("sport" + portNumber, "msg_type", msg_type);
+                component.addStringTypePropertytoPort("sport" + portNumber, "topic",topicName);
                 portNumber++;
             }
 
@@ -101,6 +104,8 @@ public class Model {
             for (Topic topic : publishedTopics) {
                 component.addPublisherPort("pport" + portNumber);
                 IAcmePort port = component.getPort("pport" + portNumber);
+                String msg_type = null;
+                String topicName = null;
                 for (Connector connector : connectorArrayList) {
                     if (connector.getName() == topic.getName()) {
                         while (connector.getRole("ROSTopicAdvertiserRoleT" + roleNumber) != null)
@@ -114,15 +119,18 @@ public class Model {
                         } catch (AcmeException e) {
                             e.printStackTrace();
                         }
+                        msg_type = topic.getMsg_Type();
+                        topicName = topic.getName().substring(0, topic.getName().length()-5).replace("__", "/");
                     }
                 }
 
-                //component.addStringTypePropertytoPort("pport" + portNumber, "msg_type", "msg/odometety.msg");
+                component.addStringTypePropertytoPort("pport" + portNumber, "msg_type",msg_type);
+                component.addStringTypePropertytoPort("pport" + portNumber, "topic",topicName);
                 portNumber++;
             }
 
-//            System.out.println(component.getName());
-            //component.printPortDetails();
+//          System.out.println(component.getName());
+//          component.printPortDetails();
             componentArrayList.add(component);
         }
         System.out.println("Finished");
@@ -160,13 +168,18 @@ public class Model {
     }
 
 
-    public void createTopicList(JSONArray array) {
-        for (int i = 0; i < array.length(); i++) {
-            Topic topic = new Topic(array.getString(i));
+    public void createTopicList(String t) {
+
+        JSONObject jObject = new JSONObject(t);
+        Iterator<?> keys = jObject.keys();
+
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
+            String value = (String) jObject.get(key);
+            Topic topic = new Topic(key, value);
             topicArrayList.add(topic);
         }
     }
-
 
     public void createNodeList(JSONArray array) {
 
