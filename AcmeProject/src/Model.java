@@ -136,7 +136,7 @@ public class Model {
             e.printStackTrace();
         }
         try {
-            s.write(model.toString().getBytes(Charset.forName("UTF-8")));
+            s.write(model.toString().getBytes(Charset.forName("UTF-8")),10,0);
             s.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -147,6 +147,13 @@ public class Model {
         } catch (AcmeVisitorException e) {
             e.printStackTrace();
         }
+
+        try {
+            s.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
