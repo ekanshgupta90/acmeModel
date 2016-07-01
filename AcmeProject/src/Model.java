@@ -54,6 +54,7 @@ public class Model {
 
         for (Topic topic : topicArrayList) {
             Connector connector = new Connector(system, topic.getName());
+            connector.addStringTypeProperty("name", topic.getName().substring(0, topic.getName().length()-5).replace("__", "/"));
             //connector.addAdvertiserRole("ROSTopicAdvertiserRoleT0");
             //connector.addSubscriberRole("ROSTopicSubscriberRoleT0");
             //connector.addStringTypeProperty("msg_type", "msgs/odometry.msg");
@@ -65,6 +66,8 @@ public class Model {
         for (Node node : nodeArrayList) {
 
             Component component = new Component(system, node.getName());
+            component.addStringTypeProperty("name", node.getName().substring(0, node.getName().length()-4).replace("__", "/"));
+
             List<Topic> subscribedTopics = node.getSubscribed();
             List<Topic> publishedTopics = node.getPublished();
             int portNumber = 0;

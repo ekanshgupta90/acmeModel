@@ -12,7 +12,6 @@ import java.net.InetSocketAddress;
 
 public class Server {
 
-    static Boolean flag = false;
     Model model;
     HttpServer server;
 
@@ -47,29 +46,32 @@ public class Server {
             br.close();
             isr.close();
 
-
             JSONObject jObject = new JSONObject(buf.toString());
 
-            Thread t1 = new Thread(() -> {
+            //Thread t1 = new Thread(() -> {
                 model.createTopicList(jObject.getJSONArray("topics"));
-            });
-            t1.start();
+           // });
+//            t1.start();
 
-            Thread t2 = new Thread(() -> {
+//            Thread t2 = new Thread(() -> {
                 model.createNodeList(jObject.getJSONArray("nodes"));
-            });
-            t2.start();
+//            });
+  //          t2.start();
 
-            Thread t3 = new Thread(() -> {
+    //        Thread t3 = new Thread(() -> {
                 model.addPublish(jObject.get("pub").toString());
-            });
-            t3.start();
+      //      });
+  //          t3.start();
 
-            Thread t4 = new Thread(() -> {
+    //        Thread t4 = new Thread(() -> {
                 model.addSubscribe(jObject.get("sub").toString());
-            });
-            t4.start();
+      //      });
+        //    t4.start();
 
+
+
+            model.createModel();
+            model.writeToFile();
 
             String response = "Response";
             t.sendResponseHeaders(200, response.length());

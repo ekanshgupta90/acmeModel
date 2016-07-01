@@ -14,17 +14,17 @@ public class Main {
             e.printStackTrace();
         }
 
-
-        while (true) {
-            try {
-                System.in.read();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            model.createModel();
-            model.writeToFile();
-        }
+//
+//        while (true) {
+//            try {
+//                System.in.read();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            model.createModel();
+//            model.writeToFile();
+//        }
     }
 
 }
