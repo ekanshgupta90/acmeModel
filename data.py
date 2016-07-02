@@ -11,7 +11,7 @@ import rostopic
 from std_msgs.msg import String
 import rosnode
 
-URL = "http://128.237.181.152:8000/"
+URL = "http://192.168.0.15:8000/"
 
 def parse_info_sub(info):
     reached_sub = False
@@ -56,8 +56,11 @@ def sendPub(new_publish):
         for value in values:
             y[value].append(key)
 
+    for key in y.keys():
+        new_key = key.replace("/", "__")
+        y[new_key] = [item.replace("/", "__") for item in y.pop(key)]
+
     return y
-    #requests.get(URL + 'pub', data=json.dumps(y))
 
 
 
@@ -69,23 +72,24 @@ def sendSub(new_publish):
     for key, values in p.iteritems():
         for value in values:
             y[value].append(key)
+
+    for key in y.keys():
+        new_key = key.replace("/", "__")
+        y[new_key] = [item.replace("/", "__") for item in y.pop(key)]
+
     return y
-    #requests.get(URL + 'sub', data=json.dumps(y))
-    #print p
 
 def send_topics(topics):
-    topics = list(set([item for sublist in topics for item in sublist]))
-    y = {}
-    y["topics"] = topics
-    return topics
-    #requests.get(URL + 'topics', data=json.dumps(y))
+    topics_dict = {}
+    for topic, typ in topics:
+        topics_dict[topic.replace("/", "__")] = typ
+    return topics_dict
 
 
 def send_nodes(nodes):
     y = {}
     y["nodes"] = nodes
-    return nodes
-    #requests.get(URL + 'nodes', data=json.dumps(y))
+    return [item.replace("/", "__") for item in nodes]
 
 
 def arch():
