@@ -33,4 +33,8 @@ public class Node {
         return this.published;
     }
 
+    public String getOriginalName() {
+        return this.name.substring(0, this.name.length()-4).replace("__", "/");
+    }
+
 }

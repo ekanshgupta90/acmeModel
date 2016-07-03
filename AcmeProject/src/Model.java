@@ -1,10 +1,7 @@
 import com.oracle.javafx.jmx.json.JSONException;
-import org.acmestudio.acme.core.exception.AcmeException;
 import org.acmestudio.acme.core.exception.AcmeVisitorException;
 import org.acmestudio.acme.core.resource.IAcmeResource;
 import org.acmestudio.acme.core.resource.ParsingFailureException;
-import org.acmestudio.acme.element.IAcmePort;
-import org.acmestudio.acme.element.IAcmeRole;
 import org.acmestudio.acme.element.IAcmeSystem;
 import org.acmestudio.acme.model.IAcmeModel;
 import org.acmestudio.armani.ArmaniExportVisitor;
@@ -20,7 +17,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 
 public class Model {
 
@@ -28,8 +24,8 @@ public class Model {
     private IAcmeSystem system;
     private ArrayList<Node> nodeArrayList = new ArrayList<>();
     private ArrayList<Topic> topicArrayList = new ArrayList<>();
-    private ArrayList<Connector> connectorArrayList = new ArrayList<>();
     private ArrayList<Component> componentArrayList = new ArrayList<>();
+    private ArrayList<Connector> connectorArrayList = new ArrayList<>();
 
     public Model(String familyPath, String fileName, String systemName) {
         System.setProperty(StandaloneResourceProvider.FAMILY_SEARCH_PATH, familyPath);
@@ -42,99 +38,34 @@ public class Model {
             e.printStackTrace();
         }
         model = resource.getModel();
-        //System.out.println(model.toString());
-
         system = model.getSystem(systemName);
-        //System.out.println(system.toString());
+    }
+
+    public void createComponents() {
+        for (Node node : nodeArrayList) {
+            Component component = new Component(system, node.getName());
+            component.addStringTypeProperty("name",node.getOriginalName());
+            component.createSubscribers(system,node.getSubscribed(),connectorArrayList);
+            component.createPublishers(system,node.getPublished(),connectorArrayList);
+            componentArrayList.add(component);
+        }
+    }
+
+    public void createConnectors() {
+        for (Topic topic : topicArrayList) {
+            Connector connector = new Connector(system, topic.getName());
+            connector.addStringTypeProperty("name", topic.getOriginalName());
+            connector.addStringTypeProperty("msg_type", topic.getMsg_Type());
+            connectorArrayList.add(connector);
+        }
     }
 
 
     public void createModel() {
         System.out.println("Started");
-
-        for (Topic topic : topicArrayList) {
-            Connector connector = new Connector(system, topic.getName());
-            connector.addStringTypeProperty("name", topic.getName().substring(0, topic.getName().length()-5).replace("__", "/"));
-            connector.addStringTypeProperty("msg_type", topic.getMsg_Type());
-//          System.out.println(connector.getName());
-            connectorArrayList.add(connector);
-        }
-
-
-        for (Node node : nodeArrayList) {
-
-            Component component = new Component(system, node.getName());
-            component.addStringTypeProperty("name", node.getName().substring(0, node.getName().length()-4).replace("__", "/"));
-
-            List<Topic> subscribedTopics = node.getSubscribed();
-            List<Topic> publishedTopics = node.getPublished();
-            int portNumber = 0;
-            int roleNumber = 0;
-
-            for (Topic topic : subscribedTopics) {
-                component.addSubscriberPort("sport" + portNumber);
-                IAcmePort port = component.getPort("sport" + portNumber);
-                String msg_type = null;
-                String topicName = null;
-                for (Connector connector : connectorArrayList) {
-                    if (connector.getName() == topic.getName()) {
-
-                        while (connector.getRole("ROSTopicSubscriberRoleT" + roleNumber) != null)
-                            roleNumber++;
-
-                        connector.addSubscriberRole("ROSTopicSubscriberRoleT" + roleNumber);
-
-                        IAcmeRole role = connector.getRole("ROSTopicSubscriberRoleT" + roleNumber);
-                        try {
-                            system.getCommandFactory().attachmentCreateCommand(port, role).execute();
-                        } catch (AcmeException e) {
-                            e.printStackTrace();
-                        }
-                        msg_type = topic.getMsg_Type();
-                        topicName = topic.getName().substring(0, topic.getName().length()-5).replace("__", "/");
-                    }
-                }
-                component.addStringTypePropertytoPort("sport" + portNumber, "msg_type", msg_type);
-                component.addStringTypePropertytoPort("sport" + portNumber, "topic",topicName);
-                portNumber++;
-            }
-
-            portNumber = 0;
-            roleNumber = 0;
-            for (Topic topic : publishedTopics) {
-                component.addPublisherPort("pport" + portNumber);
-                IAcmePort port = component.getPort("pport" + portNumber);
-                String msg_type = null;
-                String topicName = null;
-                for (Connector connector : connectorArrayList) {
-                    if (connector.getName() == topic.getName()) {
-                        while (connector.getRole("ROSTopicAdvertiserRoleT" + roleNumber) != null)
-                            roleNumber++;
-
-                        connector.addAdvertiserRole("ROSTopicAdvertiserRoleT" + roleNumber);
-
-                        IAcmeRole role = connector.getRole("ROSTopicAdvertiserRoleT" + roleNumber);
-                        try {
-                            system.getCommandFactory().attachmentCreateCommand(port, role).execute();
-                        } catch (AcmeException e) {
-                            e.printStackTrace();
-                        }
-                        msg_type = topic.getMsg_Type();
-                        topicName = topic.getName().substring(0, topic.getName().length()-5).replace("__", "/");
-                    }
-                }
-
-                component.addStringTypePropertytoPort("pport" + portNumber, "msg_type",msg_type);
-                component.addStringTypePropertytoPort("pport" + portNumber, "topic",topicName);
-                portNumber++;
-            }
-
-//          System.out.println(component.getName());
-//          component.printPortDetails();
-            componentArrayList.add(component);
-        }
+        createConnectors();
+        createComponents();
         System.out.println("Finished");
-
     }
 
 
@@ -190,8 +121,7 @@ public class Model {
     }
 
 
-    public void addPublish(String t) throws JSONException {
-
+    public HashMap<String, ArrayList<String>> createMap(String t) {
         HashMap<String, ArrayList<String>> map = new HashMap<>();
         JSONObject jObject = new JSONObject(t);
         Iterator<?> keys = jObject.keys();
@@ -203,6 +133,13 @@ public class Model {
             for (int i = 0; i < array.length(); list.add(array.getString(i++))) ;
             map.put(key, list);
         }
+        return map;
+    }
+
+
+    public void addPublish(String t) throws JSONException {
+
+        HashMap<String, ArrayList<String>> map = createMap(t);
 
         for (String nodeName : map.keySet()) {
             for (Node node : nodeArrayList) {
@@ -220,18 +157,8 @@ public class Model {
 
 
     public void addSubscribe(String t) throws JSONException {
-        HashMap<String, ArrayList<String>> map = new HashMap<>();
-        JSONObject jObject = new JSONObject(t);
-        Iterator<?> keys = jObject.keys();
 
-        while (keys.hasNext()) {
-            String key = (String) keys.next();
-            JSONArray array = jObject.getJSONArray(key);
-            ArrayList<String> list = new ArrayList();
-            for (int i = 0; i < array.length(); list.add(array.getString(i++))) ;
-            map.put(key, list);
-        }
-
+        HashMap<String, ArrayList<String>> map = createMap(t);
         for (String nodeName : map.keySet()) {
             for (Node node : nodeArrayList) {
                 if (node.getName().equals(nodeName + "node")) {
@@ -246,6 +173,14 @@ public class Model {
         }
 
     }
+
+    public void initialize( JSONObject jObject) {
+        createTopicList(jObject.get("topics").toString());
+        createNodeList(jObject.getJSONArray("nodes"));
+        addPublish(jObject.get("pub").toString());
+        addSubscribe(jObject.get("sub").toString());
+    }
+
 
     public void flush() {
         model.dispose();
