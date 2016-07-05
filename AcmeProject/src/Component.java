@@ -41,7 +41,7 @@ public class Component {
 
     public void addPublisherPort(String name) {
         List<String> portTypeList = new ArrayList<>();
-        portTypeList.add("TopicAdvertiserPortT");
+        portTypeList.add("TopicAdvertisePortT");
 
         try {
             component.getCommandFactory().portCreateCommand(component, name, portTypeList, portTypeList).execute();

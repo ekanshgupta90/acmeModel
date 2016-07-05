@@ -27,46 +27,76 @@ System Turtlebot : ROSFam = new ROSFam extended with {
                 declaresType(r, SubscriberRoleT);
 
         }
-        Port pport0 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
-
-            Property msg_type : string = "geometry_msgs/PoseWithCovarianceStamped";
+        Port pport0 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/amcl_pose";
 
-        }
-        Port pport1 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "geometry_msgs/PoseWithCovarianceStamped";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "tf2_msgs/TFMessage";
+        }
+        Port pport1 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/tf";
 
-        }
-        Port pport2 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "tf2_msgs/TFMessage";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "geometry_msgs/PoseArray";
+        }
+        Port pport2 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/particlecloud";
 
-        }
-        Port pport3 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "geometry_msgs/PoseArray";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "rosgraph_msgs/Log";
+        }
+        Port pport3 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/rosout";
 
-        }
-        Port pport4 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "rosgraph_msgs/Log";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "dynamic_reconfigure/Config";
+        }
+        Port pport4 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/amcl/parameter_updates";
 
-        }
-        Port pport5 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "dynamic_reconfigure/Config";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+        }
+        Port pport5 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/amcl/parameter_descriptions";
+
+            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
         }
 
@@ -92,18 +122,28 @@ System Turtlebot : ROSFam = new ROSFam extended with {
                 declaresType(r, SubscriberRoleT);
 
         }
-        Port pport0 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
-
-            Property msg_type : string = "tf2_msgs/TFMessage";
+        Port pport0 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/tf";
 
-        }
-        Port pport1 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "tf2_msgs/TFMessage";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "rosgraph_msgs/Log";
+        }
+        Port pport1 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/rosout";
+
+            Property msg_type : string = "rosgraph_msgs/Log";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
         }
 
@@ -129,11 +169,16 @@ System Turtlebot : ROSFam = new ROSFam extended with {
                 declaresType(r, SubscriberRoleT);
 
         }
-        Port pport0 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
-
-            Property msg_type : string = "rosgraph_msgs/Log";
+        Port pport0 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/rosout_agg";
+
+            Property msg_type : string = "rosgraph_msgs/Log";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
         }
 
@@ -147,25 +192,40 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Component __map_servernode : ROSNodeCompT = new ROSNodeCompT extended with {
-        Port pport0 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
-
-            Property msg_type : string = "nav_msgs/MapMetaData";
+        Port pport0 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/map_metadata";
 
-        }
-        Port pport1 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "nav_msgs/MapMetaData";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "nav_msgs/OccupancyGrid";
+        }
+        Port pport1 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/map";
 
-        }
-        Port pport2 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "nav_msgs/OccupancyGrid";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "rosgraph_msgs/Log";
+        }
+        Port pport2 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/rosout";
+
+            Property msg_type : string = "rosgraph_msgs/Log";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
         }
 
@@ -179,18 +239,28 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Component __joint_state_publishernode : ROSNodeCompT = new ROSNodeCompT extended with {
-        Port pport0 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
-
-            Property msg_type : string = "sensor_msgs/JointState";
+        Port pport0 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/joint_states";
 
-        }
-        Port pport1 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "sensor_msgs/JointState";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "rosgraph_msgs/Log";
+        }
+        Port pport1 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/rosout";
+
+            Property msg_type : string = "rosgraph_msgs/Log";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
         }
 
@@ -204,25 +274,40 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Component __diagnostic_aggregatornode : ROSNodeCompT = new ROSNodeCompT extended with {
-        Port pport0 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
-
-            Property msg_type : string = "rosgraph_msgs/Log";
+        Port pport0 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/rosout";
 
-        }
-        Port pport1 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "rosgraph_msgs/Log";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "diagnostic_msgs/DiagnosticStatus";
+        }
+        Port pport1 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/diagnostics_toplevel_state";
 
-        }
-        Port pport2 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "diagnostic_msgs/DiagnosticStatus";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "diagnostic_msgs/DiagnosticArray";
+        }
+        Port pport2 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/diagnostics_agg";
+
+            Property msg_type : string = "diagnostic_msgs/DiagnosticArray";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
         }
 
@@ -260,46 +345,76 @@ System Turtlebot : ROSFam = new ROSFam extended with {
                 declaresType(r, SubscriberRoleT);
 
         }
-        Port pport0 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
-
-            Property msg_type : string = "dynamic_reconfigure/Config";
+        Port pport0 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/navigation_velocity_smoother/parameter_updates";
 
-        }
-        Port pport1 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "dynamic_reconfigure/Config";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "geometry_msgs/Twist";
+        }
+        Port pport1 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/cmd_vel_mux/input/safety_controller";
 
-        }
-        Port pport2 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "geometry_msgs/Twist";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+        }
+        Port pport2 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/navigation_velocity_smoother/parameter_descriptions";
 
-        }
-        Port pport3 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "geometry_msgs/Twist";
+        }
+        Port pport3 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/cmd_vel_mux/input/navi";
 
-        }
-        Port pport4 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "geometry_msgs/Twist";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "rosgraph_msgs/Log";
+        }
+        Port pport4 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/rosout";
 
-        }
-        Port pport5 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "rosgraph_msgs/Log";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "bond/Status";
+        }
+        Port pport5 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/mobile_base_nodelet_manager/bond";
+
+            Property msg_type : string = "bond/Status";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
         }
 
@@ -349,298 +464,508 @@ System Turtlebot : ROSFam = new ROSFam extended with {
                 declaresType(r, SubscriberRoleT);
 
         }
-        Port pport0 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
-
-            Property msg_type : string = "map_msgs/OccupancyGridUpdate";
+        Port pport0 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/global_costmap/costmap_updates";
 
-        }
-        Port pport1 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "map_msgs/OccupancyGridUpdate";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "geometry_msgs/PoseStamped";
+        }
+        Port pport1 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/current_goal";
 
-        }
-        Port pport2 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "geometry_msgs/PoseStamped";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+        }
+        Port pport2 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/parameter_descriptions";
 
-        }
-        Port pport3 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
-
             Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport3 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/local_costmap/inflation_layer/parameter_descriptions";
 
-        }
-        Port pport4 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "move_base_msgs/MoveBaseActionFeedback";
+        }
+        Port pport4 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/feedback";
 
-        }
-        Port pport5 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "move_base_msgs/MoveBaseActionFeedback";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "dynamic_reconfigure/Config";
+        }
+        Port pport5 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/global_costmap/parameter_updates";
 
-        }
-        Port pport6 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "dynamic_reconfigure/Config";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "nav_msgs/OccupancyGrid";
+        }
+        Port pport6 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/local_costmap/costmap";
 
-        }
-        Port pport7 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "nav_msgs/OccupancyGrid";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "dynamic_reconfigure/Config";
+        }
+        Port pport7 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/global_costmap/static_layer/parameter_updates";
 
-        }
-        Port pport8 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "dynamic_reconfigure/Config";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "geometry_msgs/PolygonStamped";
+        }
+        Port pport8 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/global_costmap/obstacle_layer_footprint/footprint_stamped";
 
-        }
-        Port pport9 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "geometry_msgs/PolygonStamped";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "geometry_msgs/Twist";
+        }
+        Port pport9 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/navigation_velocity_smoother/raw_cmd_vel";
 
-        }
-        Port pport10 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "geometry_msgs/Twist";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "dynamic_reconfigure/Config";
+        }
+        Port pport10 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/local_costmap/inflation_layer/parameter_updates";
 
-        }
-        Port pport11 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
-
             Property msg_type : string = "dynamic_reconfigure/Config";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport11 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/local_costmap/obstacle_layer_footprint/parameter_updates";
 
-        }
-        Port pport12 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "dynamic_reconfigure/Config";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+        }
+        Port pport12 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/global_costmap/static_layer/parameter_descriptions";
 
-        }
-        Port pport13 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "map_msgs/OccupancyGridUpdate";
+        }
+        Port pport13 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/local_costmap/costmap_updates";
 
-        }
-        Port pport14 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "map_msgs/OccupancyGridUpdate";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "nav_msgs/Path";
+        }
+        Port pport14 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/NavfnROS/plan";
 
-        }
-        Port pport15 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "nav_msgs/Path";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+        }
+        Port pport15 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/local_costmap/parameter_descriptions";
 
-        }
-        Port pport16 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
-
             Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport16 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/DWAPlannerROS/parameter_descriptions";
 
-        }
-        Port pport17 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "sensor_msgs/PointCloud2";
+        }
+        Port pport17 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/DWAPlannerROS/trajectory_cloud";
 
-        }
-        Port pport18 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "sensor_msgs/PointCloud2";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "dynamic_reconfigure/Config";
+        }
+        Port pport18 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/parameter_updates";
 
-        }
-        Port pport19 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "dynamic_reconfigure/Config";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "actionlib_msgs/GoalStatusArray";
+        }
+        Port pport19 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/status";
 
-        }
-        Port pport20 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "actionlib_msgs/GoalStatusArray";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "dynamic_reconfigure/Config";
+        }
+        Port pport20 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/global_costmap/inflation_layer/parameter_updates";
 
-        }
-        Port pport21 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "dynamic_reconfigure/Config";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "nav_msgs/OccupancyGrid";
+        }
+        Port pport21 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/global_costmap/costmap";
 
-        }
-        Port pport22 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "nav_msgs/OccupancyGrid";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "sensor_msgs/PointCloud";
+        }
+        Port pport22 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/global_costmap/obstacle_layer/clearing_endpoints";
 
-        }
-        Port pport23 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "sensor_msgs/PointCloud";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+        }
+        Port pport23 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/local_costmap/obstacle_layer_footprint/parameter_descriptions";
 
-        }
-        Port pport24 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "dynamic_reconfigure/Config";
+        }
+        Port pport24 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/local_costmap/parameter_updates";
 
-        }
-        Port pport25 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "dynamic_reconfigure/Config";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "sensor_msgs/PointCloud2";
+        }
+        Port pport25 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/DWAPlannerROS/cost_cloud";
 
-        }
-        Port pport26 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "sensor_msgs/PointCloud2";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "geometry_msgs/PolygonStamped";
+        }
+        Port pport26 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/local_costmap/obstacle_layer_footprint/footprint_stamped";
 
-        }
-        Port pport27 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "geometry_msgs/PolygonStamped";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "rosgraph_msgs/Log";
+        }
+        Port pport27 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/rosout";
 
-        }
-        Port pport28 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "rosgraph_msgs/Log";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "dynamic_reconfigure/Config";
+        }
+        Port pport28 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/global_costmap/obstacle_layer_footprint/parameter_updates";
 
-        }
-        Port pport29 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "dynamic_reconfigure/Config";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+        }
+        Port pport29 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/local_costmap/obstacle_layer/parameter_descriptions";
 
-        }
-        Port pport30 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "move_base_msgs/MoveBaseActionGoal";
+        }
+        Port pport30 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/goal";
 
-        }
-        Port pport31 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "move_base_msgs/MoveBaseActionGoal";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "dynamic_reconfigure/Config";
+        }
+        Port pport31 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/local_costmap/obstacle_layer/parameter_updates";
 
-        }
-        Port pport32 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "dynamic_reconfigure/Config";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "sensor_msgs/PointCloud";
+        }
+        Port pport32 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/local_costmap/obstacle_layer/clearing_endpoints";
 
-        }
-        Port pport33 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "sensor_msgs/PointCloud";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "nav_msgs/Path";
+        }
+        Port pport33 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/DWAPlannerROS/global_plan";
 
-        }
-        Port pport34 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
-
             Property msg_type : string = "nav_msgs/Path";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport34 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/DWAPlannerROS/local_plan";
 
-        }
-        Port pport35 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "nav_msgs/Path";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+        }
+        Port pport35 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/global_costmap/inflation_layer/parameter_descriptions";
 
-        }
-        Port pport36 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
-
             Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport36 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/global_costmap/obstacle_layer/parameter_descriptions";
 
-        }
-        Port pport37 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
-
             Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport37 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/global_costmap/obstacle_layer_footprint/parameter_descriptions";
 
-        }
-        Port pport38 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "move_base_msgs/MoveBaseActionResult";
+        }
+        Port pport38 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/result";
 
-        }
-        Port pport39 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "move_base_msgs/MoveBaseActionResult";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "dynamic_reconfigure/Config";
+        }
+        Port pport39 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/global_costmap/obstacle_layer/parameter_updates";
 
-        }
-        Port pport40 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "dynamic_reconfigure/Config";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+        }
+        Port pport40 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/global_costmap/parameter_descriptions";
 
-        }
-        Port pport41 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
-            Property msg_type : string = "dynamic_reconfigure/Config";
+        }
+        Port pport41 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/move_base/DWAPlannerROS/parameter_updates";
+
+            Property msg_type : string = "dynamic_reconfigure/Config";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
 
         }
 

@@ -27,42 +27,42 @@ System Turtlebot : ROSFam = new ROSFam extended with {
                 declaresType(r, SubscriberRoleT);
 
         }
-        Port pport0 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport0 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "geometry_msgs/PoseWithCovarianceStamped";
 
             Property topic : string = "/amcl_pose";
 
         }
-        Port pport1 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport1 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "tf2_msgs/TFMessage";
 
             Property topic : string = "/tf";
 
         }
-        Port pport2 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "dynamic_reconfigure/Config";
-
-            Property topic : string = "/amcl/parameter_updates";
-
-        }
-        Port pport3 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport2 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "geometry_msgs/PoseArray";
 
             Property topic : string = "/particlecloud";
 
         }
-        Port pport4 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport3 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "rosgraph_msgs/Log";
 
             Property topic : string = "/rosout";
 
         }
-        Port pport5 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport4 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "dynamic_reconfigure/Config";
+
+            Property topic : string = "/amcl/parameter_updates";
+
+        }
+        Port pport5 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
 
@@ -71,43 +71,6 @@ System Turtlebot : ROSFam = new ROSFam extended with {
         }
 
         Property name : string = "/amcl";
-        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
-             ! exists resp :! ServiceProviderPortT in self.PORTS | 
-                connected(req, resp);
-        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
-             ! exists resp :! ActionServerPortT in self.PORTS | 
-                connected(req, resp);
-
-    }
-    Component __cmd_vel_muxnode : ROSNodeCompT = new ROSNodeCompT extended with {
-        Port sport0 : TopicSubscribePortT = new TopicSubscribePortT extended with {
-
-            Property topic : string = "/mobile_base_nodelet_manager/bond";
-
-            Property msg_type : string = "bond/Status";
-            rule attachedOnlyToReceiverRoleT = invariant forall a in self.ATTACHEDROLES | 
-                declaresType(a, ReceiverRoleT);
-            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
-            rule attachedToSubscriberRoleT = invariant forall r in self.ATTACHEDROLES | 
-                declaresType(r, SubscriberRoleT);
-
-        }
-        Port pport0 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "rosgraph_msgs/Log";
-
-            Property topic : string = "/rosout";
-
-        }
-        Port pport1 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "bond/Status";
-
-            Property topic : string = "/mobile_base_nodelet_manager/bond";
-
-        }
-
-        Property name : string = "/cmd_vel_mux";
         rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
              ! exists resp :! ServiceProviderPortT in self.PORTS | 
                 connected(req, resp);
@@ -129,14 +92,14 @@ System Turtlebot : ROSFam = new ROSFam extended with {
                 declaresType(r, SubscriberRoleT);
 
         }
-        Port pport0 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport0 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "tf2_msgs/TFMessage";
 
             Property topic : string = "/tf";
 
         }
-        Port pport1 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport1 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "rosgraph_msgs/Log";
 
@@ -145,43 +108,6 @@ System Turtlebot : ROSFam = new ROSFam extended with {
         }
 
         Property name : string = "/robot_state_publisher";
-        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
-             ! exists resp :! ServiceProviderPortT in self.PORTS | 
-                connected(req, resp);
-        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
-             ! exists resp :! ActionServerPortT in self.PORTS | 
-                connected(req, resp);
-
-    }
-    Component __navigation_velocity_smoothernode : ROSNodeCompT = new ROSNodeCompT extended with {
-        Port sport0 : TopicSubscribePortT = new TopicSubscribePortT extended with {
-
-            Property topic : string = "/mobile_base_nodelet_manager/bond";
-
-            Property msg_type : string = "bond/Status";
-            rule attachedOnlyToReceiverRoleT = invariant forall a in self.ATTACHEDROLES | 
-                declaresType(a, ReceiverRoleT);
-            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
-            rule attachedToSubscriberRoleT = invariant forall r in self.ATTACHEDROLES | 
-                declaresType(r, SubscriberRoleT);
-
-        }
-        Port pport0 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "rosgraph_msgs/Log";
-
-            Property topic : string = "/rosout";
-
-        }
-        Port pport1 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "bond/Status";
-
-            Property topic : string = "/mobile_base_nodelet_manager/bond";
-
-        }
-
-        Property name : string = "/navigation_velocity_smoother";
         rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
              ! exists resp :! ServiceProviderPortT in self.PORTS | 
                 connected(req, resp);
@@ -203,7 +129,7 @@ System Turtlebot : ROSFam = new ROSFam extended with {
                 declaresType(r, SubscriberRoleT);
 
         }
-        Port pport0 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport0 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "rosgraph_msgs/Log";
 
@@ -221,21 +147,21 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Component __map_servernode : ROSNodeCompT = new ROSNodeCompT extended with {
-        Port pport0 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport0 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "nav_msgs/MapMetaData";
 
             Property topic : string = "/map_metadata";
 
         }
-        Port pport1 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport1 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "nav_msgs/OccupancyGrid";
 
             Property topic : string = "/map";
 
         }
-        Port pport2 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport2 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "rosgraph_msgs/Log";
 
@@ -253,14 +179,14 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Component __joint_state_publishernode : ROSNodeCompT = new ROSNodeCompT extended with {
-        Port pport0 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport0 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "sensor_msgs/JointState";
 
             Property topic : string = "/joint_states";
 
         }
-        Port pport1 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport1 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "rosgraph_msgs/Log";
 
@@ -277,59 +203,22 @@ System Turtlebot : ROSFam = new ROSFam extended with {
                 connected(req, resp);
 
     }
-    Component __kobuki_safety_controllernode : ROSNodeCompT = new ROSNodeCompT extended with {
-        Port sport0 : TopicSubscribePortT = new TopicSubscribePortT extended with {
-
-            Property topic : string = "/mobile_base_nodelet_manager/bond";
-
-            Property msg_type : string = "bond/Status";
-            rule attachedOnlyToReceiverRoleT = invariant forall a in self.ATTACHEDROLES | 
-                declaresType(a, ReceiverRoleT);
-            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
-            rule attachedToSubscriberRoleT = invariant forall r in self.ATTACHEDROLES | 
-                declaresType(r, SubscriberRoleT);
-
-        }
-        Port pport0 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "rosgraph_msgs/Log";
-
-            Property topic : string = "/rosout";
-
-        }
-        Port pport1 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "bond/Status";
-
-            Property topic : string = "/mobile_base_nodelet_manager/bond";
-
-        }
-
-        Property name : string = "/kobuki_safety_controller";
-        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
-             ! exists resp :! ServiceProviderPortT in self.PORTS | 
-                connected(req, resp);
-        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
-             ! exists resp :! ActionServerPortT in self.PORTS | 
-                connected(req, resp);
-
-    }
     Component __diagnostic_aggregatornode : ROSNodeCompT = new ROSNodeCompT extended with {
-        Port pport0 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport0 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "rosgraph_msgs/Log";
 
             Property topic : string = "/rosout";
 
         }
-        Port pport1 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport1 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "diagnostic_msgs/DiagnosticStatus";
 
             Property topic : string = "/diagnostics_toplevel_state";
 
         }
-        Port pport2 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport2 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "diagnostic_msgs/DiagnosticArray";
 
@@ -349,7 +238,7 @@ System Turtlebot : ROSFam = new ROSFam extended with {
     Component __mobile_base_nodelet_managernode : ROSNodeCompT = new ROSNodeCompT extended with {
         Port sport0 : TopicSubscribePortT = new TopicSubscribePortT extended with {
 
-            Property topic : string = "/cmd_vel_mux/input/safety_controller";
+            Property topic : string = "/navigation_velocity_smoother/raw_cmd_vel";
 
             Property msg_type : string = "geometry_msgs/Twist";
             rule attachedOnlyToReceiverRoleT = invariant forall a in self.ATTACHEDROLES | 
@@ -361,42 +250,6 @@ System Turtlebot : ROSFam = new ROSFam extended with {
         }
         Port sport1 : TopicSubscribePortT = new TopicSubscribePortT extended with {
 
-            Property topic : string = "/navigation_velocity_smoother/raw_cmd_vel";
-
-            Property msg_type : string = "geometry_msgs/Twist";
-            rule attachedOnlyToReceiverRoleT = invariant forall a in self.ATTACHEDROLES | 
-                declaresType(a, ReceiverRoleT);
-            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
-            rule attachedToSubscriberRoleT = invariant forall r in self.ATTACHEDROLES | 
-                declaresType(r, SubscriberRoleT);
-
-        }
-        Port sport2 : TopicSubscribePortT = new TopicSubscribePortT extended with {
-
-            Property topic : string = "/cmd_vel_mux/input/navi";
-
-            Property msg_type : string = "geometry_msgs/Twist";
-            rule attachedOnlyToReceiverRoleT = invariant forall a in self.ATTACHEDROLES | 
-                declaresType(a, ReceiverRoleT);
-            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
-            rule attachedToSubscriberRoleT = invariant forall r in self.ATTACHEDROLES | 
-                declaresType(r, SubscriberRoleT);
-
-        }
-        Port sport3 : TopicSubscribePortT = new TopicSubscribePortT extended with {
-
-            Property topic : string = "/mobile_base/commands/velocity";
-
-            Property msg_type : string = "geometry_msgs/Twist";
-            rule attachedOnlyToReceiverRoleT = invariant forall a in self.ATTACHEDROLES | 
-                declaresType(a, ReceiverRoleT);
-            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
-            rule attachedToSubscriberRoleT = invariant forall r in self.ATTACHEDROLES | 
-                declaresType(r, SubscriberRoleT);
-
-        }
-        Port sport4 : TopicSubscribePortT = new TopicSubscribePortT extended with {
-
             Property topic : string = "/mobile_base_nodelet_manager/bond";
 
             Property msg_type : string = "bond/Status";
@@ -407,70 +260,42 @@ System Turtlebot : ROSFam = new ROSFam extended with {
                 declaresType(r, SubscriberRoleT);
 
         }
-        Port pport0 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
-
-            Property topic : string = "/cmd_vel_mux/parameter_descriptions";
-
-        }
-        Port pport1 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport0 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "dynamic_reconfigure/Config";
 
             Property topic : string = "/navigation_velocity_smoother/parameter_updates";
 
         }
-        Port pport2 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport1 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "geometry_msgs/Twist";
 
             Property topic : string = "/cmd_vel_mux/input/safety_controller";
 
         }
-        Port pport3 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "dynamic_reconfigure/Config";
-
-            Property topic : string = "/cmd_vel_mux/parameter_updates";
-
-        }
-        Port pport4 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "std_msgs/String";
-
-            Property topic : string = "/cmd_vel_mux/active";
-
-        }
-        Port pport5 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "geometry_msgs/Twist";
-
-            Property topic : string = "/cmd_vel_mux/input/navi";
-
-        }
-        Port pport6 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport2 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
 
             Property topic : string = "/navigation_velocity_smoother/parameter_descriptions";
 
         }
-        Port pport7 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport3 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "geometry_msgs/Twist";
+
+            Property topic : string = "/cmd_vel_mux/input/navi";
+
+        }
+        Port pport4 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "rosgraph_msgs/Log";
 
             Property topic : string = "/rosout";
 
         }
-        Port pport8 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "geometry_msgs/Twist";
-
-            Property topic : string = "/mobile_base/commands/velocity";
-
-        }
-        Port pport9 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport5 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "bond/Status";
 
@@ -524,294 +349,294 @@ System Turtlebot : ROSFam = new ROSFam extended with {
                 declaresType(r, SubscriberRoleT);
 
         }
-        Port pport0 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport0 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "map_msgs/OccupancyGridUpdate";
 
             Property topic : string = "/move_base/global_costmap/costmap_updates";
 
         }
-        Port pport1 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport1 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "geometry_msgs/PoseStamped";
 
             Property topic : string = "/move_base/current_goal";
 
         }
-        Port pport2 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
-
-            Property topic : string = "/move_base/local_costmap/inflation_layer/parameter_descriptions";
-
-        }
-        Port pport3 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "move_base_msgs/MoveBaseActionFeedback";
-
-            Property topic : string = "/move_base/feedback";
-
-        }
-        Port pport4 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "dynamic_reconfigure/Config";
-
-            Property topic : string = "/move_base/global_costmap/parameter_updates";
-
-        }
-        Port pport5 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "nav_msgs/OccupancyGrid";
-
-            Property topic : string = "/move_base/local_costmap/costmap";
-
-        }
-        Port pport6 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "dynamic_reconfigure/Config";
-
-            Property topic : string = "/move_base/global_costmap/static_layer/parameter_updates";
-
-        }
-        Port pport7 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "geometry_msgs/PolygonStamped";
-
-            Property topic : string = "/move_base/global_costmap/obstacle_layer_footprint/footprint_stamped";
-
-        }
-        Port pport8 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "geometry_msgs/Twist";
-
-            Property topic : string = "/navigation_velocity_smoother/raw_cmd_vel";
-
-        }
-        Port pport9 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "dynamic_reconfigure/Config";
-
-            Property topic : string = "/move_base/local_costmap/inflation_layer/parameter_updates";
-
-        }
-        Port pport10 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "dynamic_reconfigure/Config";
-
-            Property topic : string = "/move_base/local_costmap/obstacle_layer_footprint/parameter_updates";
-
-        }
-        Port pport11 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
-
-            Property topic : string = "/move_base/global_costmap/static_layer/parameter_descriptions";
-
-        }
-        Port pport12 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "map_msgs/OccupancyGridUpdate";
-
-            Property topic : string = "/move_base/local_costmap/costmap_updates";
-
-        }
-        Port pport13 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "nav_msgs/Path";
-
-            Property topic : string = "/move_base/NavfnROS/plan";
-
-        }
-        Port pport14 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
-
-            Property topic : string = "/move_base/local_costmap/parameter_descriptions";
-
-        }
-        Port pport15 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
-
-            Property topic : string = "/move_base/DWAPlannerROS/parameter_descriptions";
-
-        }
-        Port pport16 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "sensor_msgs/PointCloud2";
-
-            Property topic : string = "/move_base/DWAPlannerROS/trajectory_cloud";
-
-        }
-        Port pport17 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "dynamic_reconfigure/Config";
-
-            Property topic : string = "/move_base/parameter_updates";
-
-        }
-        Port pport18 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "actionlib_msgs/GoalStatusArray";
-
-            Property topic : string = "/move_base/status";
-
-        }
-        Port pport19 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "dynamic_reconfigure/Config";
-
-            Property topic : string = "/move_base/global_costmap/inflation_layer/parameter_updates";
-
-        }
-        Port pport20 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "nav_msgs/OccupancyGrid";
-
-            Property topic : string = "/move_base/global_costmap/costmap";
-
-        }
-        Port pport21 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "sensor_msgs/PointCloud";
-
-            Property topic : string = "/move_base/global_costmap/obstacle_layer/clearing_endpoints";
-
-        }
-        Port pport22 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
-
-            Property topic : string = "/move_base/local_costmap/obstacle_layer_footprint/parameter_descriptions";
-
-        }
-        Port pport23 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "dynamic_reconfigure/Config";
-
-            Property topic : string = "/move_base/local_costmap/parameter_updates";
-
-        }
-        Port pport24 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "sensor_msgs/PointCloud2";
-
-            Property topic : string = "/move_base/DWAPlannerROS/cost_cloud";
-
-        }
-        Port pport25 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "geometry_msgs/PolygonStamped";
-
-            Property topic : string = "/move_base/local_costmap/obstacle_layer_footprint/footprint_stamped";
-
-        }
-        Port pport26 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "rosgraph_msgs/Log";
-
-            Property topic : string = "/rosout";
-
-        }
-        Port pport27 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "dynamic_reconfigure/Config";
-
-            Property topic : string = "/move_base/global_costmap/obstacle_layer_footprint/parameter_updates";
-
-        }
-        Port pport28 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
-
-            Property topic : string = "/move_base/local_costmap/obstacle_layer/parameter_descriptions";
-
-        }
-        Port pport29 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "move_base_msgs/MoveBaseActionGoal";
-
-            Property topic : string = "/move_base/goal";
-
-        }
-        Port pport30 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "dynamic_reconfigure/Config";
-
-            Property topic : string = "/move_base/local_costmap/obstacle_layer/parameter_updates";
-
-        }
-        Port pport31 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "sensor_msgs/PointCloud";
-
-            Property topic : string = "/move_base/local_costmap/obstacle_layer/clearing_endpoints";
-
-        }
-        Port pport32 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "nav_msgs/Path";
-
-            Property topic : string = "/move_base/DWAPlannerROS/global_plan";
-
-        }
-        Port pport33 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "nav_msgs/Path";
-
-            Property topic : string = "/move_base/DWAPlannerROS/local_plan";
-
-        }
-        Port pport34 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
-
-            Property topic : string = "/move_base/global_costmap/inflation_layer/parameter_descriptions";
-
-        }
-        Port pport35 : TopicPublisherPortT = new TopicPublisherPortT extended with {
-
-            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
-
-            Property topic : string = "/move_base/global_costmap/obstacle_layer/parameter_descriptions";
-
-        }
-        Port pport36 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport2 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
 
             Property topic : string = "/move_base/parameter_descriptions";
 
         }
-        Port pport37 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport3 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+
+            Property topic : string = "/move_base/local_costmap/inflation_layer/parameter_descriptions";
+
+        }
+        Port pport4 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "move_base_msgs/MoveBaseActionFeedback";
+
+            Property topic : string = "/move_base/feedback";
+
+        }
+        Port pport5 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "dynamic_reconfigure/Config";
+
+            Property topic : string = "/move_base/global_costmap/parameter_updates";
+
+        }
+        Port pport6 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "nav_msgs/OccupancyGrid";
+
+            Property topic : string = "/move_base/local_costmap/costmap";
+
+        }
+        Port pport7 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "dynamic_reconfigure/Config";
+
+            Property topic : string = "/move_base/global_costmap/static_layer/parameter_updates";
+
+        }
+        Port pport8 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "geometry_msgs/PolygonStamped";
+
+            Property topic : string = "/move_base/global_costmap/obstacle_layer_footprint/footprint_stamped";
+
+        }
+        Port pport9 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "geometry_msgs/Twist";
+
+            Property topic : string = "/navigation_velocity_smoother/raw_cmd_vel";
+
+        }
+        Port pport10 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "dynamic_reconfigure/Config";
+
+            Property topic : string = "/move_base/local_costmap/inflation_layer/parameter_updates";
+
+        }
+        Port pport11 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "dynamic_reconfigure/Config";
+
+            Property topic : string = "/move_base/local_costmap/obstacle_layer_footprint/parameter_updates";
+
+        }
+        Port pport12 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+
+            Property topic : string = "/move_base/global_costmap/static_layer/parameter_descriptions";
+
+        }
+        Port pport13 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "map_msgs/OccupancyGridUpdate";
+
+            Property topic : string = "/move_base/local_costmap/costmap_updates";
+
+        }
+        Port pport14 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "nav_msgs/Path";
+
+            Property topic : string = "/move_base/NavfnROS/plan";
+
+        }
+        Port pport15 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+
+            Property topic : string = "/move_base/local_costmap/parameter_descriptions";
+
+        }
+        Port pport16 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+
+            Property topic : string = "/move_base/DWAPlannerROS/parameter_descriptions";
+
+        }
+        Port pport17 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "sensor_msgs/PointCloud2";
+
+            Property topic : string = "/move_base/DWAPlannerROS/trajectory_cloud";
+
+        }
+        Port pport18 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "dynamic_reconfigure/Config";
+
+            Property topic : string = "/move_base/parameter_updates";
+
+        }
+        Port pport19 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "actionlib_msgs/GoalStatusArray";
+
+            Property topic : string = "/move_base/status";
+
+        }
+        Port pport20 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "dynamic_reconfigure/Config";
+
+            Property topic : string = "/move_base/global_costmap/inflation_layer/parameter_updates";
+
+        }
+        Port pport21 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "nav_msgs/OccupancyGrid";
+
+            Property topic : string = "/move_base/global_costmap/costmap";
+
+        }
+        Port pport22 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "sensor_msgs/PointCloud";
+
+            Property topic : string = "/move_base/global_costmap/obstacle_layer/clearing_endpoints";
+
+        }
+        Port pport23 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+
+            Property topic : string = "/move_base/local_costmap/obstacle_layer_footprint/parameter_descriptions";
+
+        }
+        Port pport24 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "dynamic_reconfigure/Config";
+
+            Property topic : string = "/move_base/local_costmap/parameter_updates";
+
+        }
+        Port pport25 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "sensor_msgs/PointCloud2";
+
+            Property topic : string = "/move_base/DWAPlannerROS/cost_cloud";
+
+        }
+        Port pport26 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "geometry_msgs/PolygonStamped";
+
+            Property topic : string = "/move_base/local_costmap/obstacle_layer_footprint/footprint_stamped";
+
+        }
+        Port pport27 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "rosgraph_msgs/Log";
+
+            Property topic : string = "/rosout";
+
+        }
+        Port pport28 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "dynamic_reconfigure/Config";
+
+            Property topic : string = "/move_base/global_costmap/obstacle_layer_footprint/parameter_updates";
+
+        }
+        Port pport29 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+
+            Property topic : string = "/move_base/local_costmap/obstacle_layer/parameter_descriptions";
+
+        }
+        Port pport30 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "move_base_msgs/MoveBaseActionGoal";
+
+            Property topic : string = "/move_base/goal";
+
+        }
+        Port pport31 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "dynamic_reconfigure/Config";
+
+            Property topic : string = "/move_base/local_costmap/obstacle_layer/parameter_updates";
+
+        }
+        Port pport32 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "sensor_msgs/PointCloud";
+
+            Property topic : string = "/move_base/local_costmap/obstacle_layer/clearing_endpoints";
+
+        }
+        Port pport33 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "nav_msgs/Path";
+
+            Property topic : string = "/move_base/DWAPlannerROS/global_plan";
+
+        }
+        Port pport34 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "nav_msgs/Path";
+
+            Property topic : string = "/move_base/DWAPlannerROS/local_plan";
+
+        }
+        Port pport35 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+
+            Property topic : string = "/move_base/global_costmap/inflation_layer/parameter_descriptions";
+
+        }
+        Port pport36 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
+
+            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+
+            Property topic : string = "/move_base/global_costmap/obstacle_layer/parameter_descriptions";
+
+        }
+        Port pport37 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
 
             Property topic : string = "/move_base/global_costmap/obstacle_layer_footprint/parameter_descriptions";
 
         }
-        Port pport38 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport38 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "move_base_msgs/MoveBaseActionResult";
 
             Property topic : string = "/move_base/result";
 
         }
-        Port pport39 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport39 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "dynamic_reconfigure/Config";
 
             Property topic : string = "/move_base/global_costmap/obstacle_layer/parameter_updates";
 
         }
-        Port pport40 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport40 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
 
             Property topic : string = "/move_base/global_costmap/parameter_descriptions";
 
         }
-        Port pport41 : TopicPublisherPortT = new TopicPublisherPortT extended with {
+        Port pport41 : TopicAdvertiserPortT = new TopicAdvertiserPortT extended with {
 
             Property msg_type : string = "dynamic_reconfigure/Config";
 
@@ -837,9 +662,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+        Property topic : string = "/move_base/local_costmap/parameter_descriptions";
 
-        Property name : string = "/move_base/local_costmap/parameter_descriptions";
+        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -857,7 +682,7 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Connector __move_base__global_costmap__inflation_layer__parameter_descriptionstopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicAdvertiserRoleT9 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+        Role ROSTopicAdvertiserRoleT6 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
             rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
                 declaresType(a, AnnouncePortT);
             rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
@@ -865,9 +690,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+        Property topic : string = "/move_base/global_costmap/inflation_layer/parameter_descriptions";
 
-        Property name : string = "/move_base/global_costmap/inflation_layer/parameter_descriptions";
+        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -893,9 +718,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "rosgraph_msgs/Log";
+        Property topic : string = "/rosout_agg";
 
-        Property name : string = "/rosout_agg";
+        Property msg_type : string = "rosgraph_msgs/Log";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -928,9 +753,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "geometry_msgs/Twist";
+        Property topic : string = "/navigation_velocity_smoother/raw_cmd_vel";
 
-        Property name : string = "/navigation_velocity_smoother/raw_cmd_vel";
+        Property msg_type : string = "geometry_msgs/Twist";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -956,9 +781,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "nav_msgs/OccupancyGrid";
+        Property topic : string = "/move_base/local_costmap/costmap";
 
-        Property name : string = "/move_base/local_costmap/costmap";
+        Property msg_type : string = "nav_msgs/OccupancyGrid";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -984,9 +809,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "dynamic_reconfigure/Config";
+        Property topic : string = "/navigation_velocity_smoother/parameter_updates";
 
-        Property name : string = "/navigation_velocity_smoother/parameter_updates";
+        Property msg_type : string = "dynamic_reconfigure/Config";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1012,9 +837,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "sensor_msgs/PointCloud";
+        Property topic : string = "/move_base/global_costmap/obstacle_layer/clearing_endpoints";
 
-        Property name : string = "/move_base/global_costmap/obstacle_layer/clearing_endpoints";
+        Property msg_type : string = "sensor_msgs/PointCloud";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1032,7 +857,7 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Connector __move_base__local_costmap__obstacle_layer__parameter_descriptionstopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicAdvertiserRoleT9 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+        Role ROSTopicAdvertiserRoleT6 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
             rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
                 declaresType(a, AnnouncePortT);
             rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
@@ -1040,9 +865,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+        Property topic : string = "/move_base/local_costmap/obstacle_layer/parameter_descriptions";
 
-        Property name : string = "/move_base/local_costmap/obstacle_layer/parameter_descriptions";
+        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1060,7 +885,7 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Connector __move_base__DWAPlannerROS__local_plantopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicAdvertiserRoleT9 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+        Role ROSTopicAdvertiserRoleT6 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
             rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
                 declaresType(a, AnnouncePortT);
             rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
@@ -1068,9 +893,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "nav_msgs/Path";
+        Property topic : string = "/move_base/DWAPlannerROS/local_plan";
 
-        Property name : string = "/move_base/DWAPlannerROS/local_plan";
+        Property msg_type : string = "nav_msgs/Path";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1088,7 +913,7 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Connector __move_base__global_costmap__obstacle_layer_footprint__parameter_descriptionstopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicAdvertiserRoleT9 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+        Role ROSTopicAdvertiserRoleT6 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
             rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
                 declaresType(a, AnnouncePortT);
             rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
@@ -1096,9 +921,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+        Property topic : string = "/move_base/global_costmap/obstacle_layer_footprint/parameter_descriptions";
 
-        Property name : string = "/move_base/global_costmap/obstacle_layer_footprint/parameter_descriptions";
+        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1138,9 +963,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "nav_msgs/OccupancyGrid";
+        Property topic : string = "/map";
 
-        Property name : string = "/map";
+        Property msg_type : string = "nav_msgs/OccupancyGrid";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1166,9 +991,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+        Property topic : string = "/move_base/global_costmap/static_layer/parameter_descriptions";
 
-        Property name : string = "/move_base/global_costmap/static_layer/parameter_descriptions";
+        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1194,9 +1019,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+        Property topic : string = "/move_base/local_costmap/obstacle_layer_footprint/parameter_descriptions";
 
-        Property name : string = "/move_base/local_costmap/obstacle_layer_footprint/parameter_descriptions";
+        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1222,9 +1047,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "geometry_msgs/PoseStamped";
+        Property topic : string = "/move_base/current_goal";
 
-        Property name : string = "/move_base/current_goal";
+        Property msg_type : string = "geometry_msgs/PoseStamped";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1250,9 +1075,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "geometry_msgs/PoseWithCovarianceStamped";
+        Property topic : string = "/amcl_pose";
 
-        Property name : string = "/amcl_pose";
+        Property msg_type : string = "geometry_msgs/PoseWithCovarianceStamped";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1278,9 +1103,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+        Property topic : string = "/move_base/local_costmap/inflation_layer/parameter_descriptions";
 
-        Property name : string = "/move_base/local_costmap/inflation_layer/parameter_descriptions";
+        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1306,9 +1131,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "dynamic_reconfigure/Config";
+        Property topic : string = "/move_base/local_costmap/obstacle_layer_footprint/parameter_updates";
 
-        Property name : string = "/move_base/local_costmap/obstacle_layer_footprint/parameter_updates";
+        Property msg_type : string = "dynamic_reconfigure/Config";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1326,52 +1151,17 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Connector __move_base__DWAPlannerROS__global_plantopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicAdvertiserRoleT9 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+        Role ROSTopicAdvertiserRoleT6 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
             rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
                 declaresType(a, AnnouncePortT);
             rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
                 declaresType(p, PublishPortT);
 
         }
+
+        Property topic : string = "/move_base/DWAPlannerROS/global_plan";
 
         Property msg_type : string = "nav_msgs/Path";
-
-        Property name : string = "/move_base/DWAPlannerROS/global_plan";
-        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
-            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
-                (p.topic == self.topic AND p.msg_type == self.msg_type);
-        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
-            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
-                (p.topic == self.topic AND p.msg_type == self.msg_type);
-        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
-            declaresType(r, AnnouncerRoleT);
-        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
-            declaresType(r, ReceiverRoleT);
-        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
-            declaresType(r, PublisherRoleT);
-        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
-            declaresType(r, SubscriberRoleT);
-
-    }
-    Connector __mobile_base__commands__velocitytopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicSubscriberRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
-
-        }
-        Role ROSTopicAdvertiserRoleT8 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
-
-        }
-
-        Property msg_type : string = "geometry_msgs/Twist";
-
-        Property name : string = "/mobile_base/commands/velocity";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1389,7 +1179,7 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Connector __diagnostics_aggtopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicAdvertiserRoleT7 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+        Role ROSTopicAdvertiserRoleT4 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
             rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
                 declaresType(a, AnnouncePortT);
             rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
@@ -1397,9 +1187,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "diagnostic_msgs/DiagnosticArray";
+        Property topic : string = "/diagnostics_agg";
 
-        Property name : string = "/diagnostics_agg";
+        Property msg_type : string = "diagnostic_msgs/DiagnosticArray";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1425,9 +1215,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "nav_msgs/OccupancyGrid";
+        Property topic : string = "/move_base/global_costmap/costmap";
 
-        Property name : string = "/move_base/global_costmap/costmap";
+        Property msg_type : string = "nav_msgs/OccupancyGrid";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1445,7 +1235,7 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Connector __move_base__resulttopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicAdvertiserRoleT9 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+        Role ROSTopicAdvertiserRoleT6 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
             rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
                 declaresType(a, AnnouncePortT);
             rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
@@ -1453,9 +1243,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "move_base_msgs/MoveBaseActionResult";
+        Property topic : string = "/move_base/result";
 
-        Property name : string = "/move_base/result";
+        Property msg_type : string = "move_base_msgs/MoveBaseActionResult";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1480,59 +1270,17 @@ System Turtlebot : ROSFam = new ROSFam extended with {
                 declaresType(p, PublishPortT);
 
         }
-        Role ROSTopicAdvertiserRoleT1 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+        Role ROSTopicAdvertiserRoleT5 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
             rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
                 declaresType(a, AnnouncePortT);
             rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
                 declaresType(p, PublishPortT);
 
         }
-        Role ROSTopicSubscriberRoleT1 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
 
-        }
-        Role ROSTopicAdvertiserRoleT3 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
-
-        }
-        Role ROSTopicSubscriberRoleT2 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
-
-        }
-        Role ROSTopicAdvertiserRoleT6 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
-
-        }
-        Role ROSTopicSubscriberRoleT3 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
-
-        }
-        Role ROSTopicAdvertiserRoleT8 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
-
-        }
+        Property topic : string = "/mobile_base_nodelet_manager/bond";
 
         Property msg_type : string = "bond/Status";
-
-        Property name : string = "/mobile_base_nodelet_manager/bond";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1558,9 +1306,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+        Property topic : string = "/amcl/parameter_descriptions";
 
-        Property name : string = "/amcl/parameter_descriptions";
+        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1592,6 +1340,13 @@ System Turtlebot : ROSFam = new ROSFam extended with {
                 declaresType(p, PublishPortT);
 
         }
+        Role ROSTopicSubscriberRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
         Role ROSTopicAdvertiserRoleT2 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
             rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
                 declaresType(a, AnnouncePortT);
@@ -1600,13 +1355,6 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
         Role ROSTopicAdvertiserRoleT3 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
-
-        }
-        Role ROSTopicSubscriberRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
             rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
                 declaresType(a, AnnouncePortT);
             rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
@@ -1634,31 +1382,10 @@ System Turtlebot : ROSFam = new ROSFam extended with {
                 declaresType(p, PublishPortT);
 
         }
-        Role ROSTopicAdvertiserRoleT7 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
 
-        }
-        Role ROSTopicAdvertiserRoleT8 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
-
-        }
-        Role ROSTopicAdvertiserRoleT9 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
-
-        }
+        Property topic : string = "/rosout";
 
         Property msg_type : string = "rosgraph_msgs/Log";
-
-        Property name : string = "/rosout";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1676,7 +1403,7 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Connector __diagnostics_toplevel_statetopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicAdvertiserRoleT7 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+        Role ROSTopicAdvertiserRoleT4 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
             rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
                 declaresType(a, AnnouncePortT);
             rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
@@ -1684,9 +1411,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "diagnostic_msgs/DiagnosticStatus";
+        Property topic : string = "/diagnostics_toplevel_state";
 
-        Property name : string = "/diagnostics_toplevel_state";
+        Property msg_type : string = "diagnostic_msgs/DiagnosticStatus";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1719,9 +1446,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "sensor_msgs/JointState";
+        Property topic : string = "/joint_states";
 
-        Property name : string = "/joint_states";
+        Property msg_type : string = "sensor_msgs/JointState";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1739,13 +1466,6 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Connector __cmd_vel_mux__input__safety_controllertopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicSubscriberRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
-
-        }
         Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
             rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
                 declaresType(a, AnnouncePortT);
@@ -1754,9 +1474,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "geometry_msgs/Twist";
+        Property topic : string = "/cmd_vel_mux/input/safety_controller";
 
-        Property name : string = "/cmd_vel_mux/input/safety_controller";
+        Property msg_type : string = "geometry_msgs/Twist";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1782,9 +1502,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "nav_msgs/Path";
+        Property topic : string = "/move_base/NavfnROS/plan";
 
-        Property name : string = "/move_base/NavfnROS/plan";
+        Property msg_type : string = "nav_msgs/Path";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1810,9 +1530,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "dynamic_reconfigure/Config";
+        Property topic : string = "/move_base/local_costmap/inflation_layer/parameter_updates";
 
-        Property name : string = "/move_base/local_costmap/inflation_layer/parameter_updates";
+        Property msg_type : string = "dynamic_reconfigure/Config";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1838,9 +1558,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "dynamic_reconfigure/Config";
+        Property topic : string = "/move_base/global_costmap/parameter_updates";
 
-        Property name : string = "/move_base/global_costmap/parameter_updates";
+        Property msg_type : string = "dynamic_reconfigure/Config";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1866,9 +1586,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "geometry_msgs/PoseArray";
+        Property topic : string = "/particlecloud";
 
-        Property name : string = "/particlecloud";
+        Property msg_type : string = "geometry_msgs/PoseArray";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1886,7 +1606,7 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Connector __move_base__global_costmap__parameter_descriptionstopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicAdvertiserRoleT9 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+        Role ROSTopicAdvertiserRoleT6 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
             rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
                 declaresType(a, AnnouncePortT);
             rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
@@ -1894,9 +1614,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+        Property topic : string = "/move_base/global_costmap/parameter_descriptions";
 
-        Property name : string = "/move_base/global_costmap/parameter_descriptions";
+        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1914,7 +1634,7 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Connector __move_base__global_costmap__obstacle_layer__parameter_updatestopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicAdvertiserRoleT9 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+        Role ROSTopicAdvertiserRoleT6 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
             rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
                 declaresType(a, AnnouncePortT);
             rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
@@ -1922,9 +1642,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "dynamic_reconfigure/Config";
+        Property topic : string = "/move_base/global_costmap/obstacle_layer/parameter_updates";
 
-        Property name : string = "/move_base/global_costmap/obstacle_layer/parameter_updates";
+        Property msg_type : string = "dynamic_reconfigure/Config";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1942,7 +1662,7 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Connector __move_base__DWAPlannerROS__parameter_updatestopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicAdvertiserRoleT9 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+        Role ROSTopicAdvertiserRoleT6 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
             rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
                 declaresType(a, AnnouncePortT);
             rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
@@ -1950,9 +1670,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "dynamic_reconfigure/Config";
+        Property topic : string = "/move_base/DWAPlannerROS/parameter_updates";
 
-        Property name : string = "/move_base/DWAPlannerROS/parameter_updates";
+        Property msg_type : string = "dynamic_reconfigure/Config";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -1978,9 +1698,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "dynamic_reconfigure/Config";
+        Property topic : string = "/move_base/local_costmap/parameter_updates";
 
-        Property name : string = "/move_base/local_costmap/parameter_updates";
+        Property msg_type : string = "dynamic_reconfigure/Config";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -2006,9 +1726,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "map_msgs/OccupancyGridUpdate";
+        Property topic : string = "/move_base/local_costmap/costmap_updates";
 
-        Property name : string = "/move_base/local_costmap/costmap_updates";
+        Property msg_type : string = "map_msgs/OccupancyGridUpdate";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -2034,9 +1754,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "actionlib_msgs/GoalStatusArray";
+        Property topic : string = "/move_base/status";
 
-        Property name : string = "/move_base/status";
+        Property msg_type : string = "actionlib_msgs/GoalStatusArray";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -2062,37 +1782,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
+        Property topic : string = "/amcl/parameter_updates";
+
         Property msg_type : string = "dynamic_reconfigure/Config";
-
-        Property name : string = "/amcl/parameter_updates";
-        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
-            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
-                (p.topic == self.topic AND p.msg_type == self.msg_type);
-        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
-            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
-                (p.topic == self.topic AND p.msg_type == self.msg_type);
-        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
-            declaresType(r, AnnouncerRoleT);
-        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
-            declaresType(r, ReceiverRoleT);
-        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
-            declaresType(r, PublisherRoleT);
-        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
-            declaresType(r, SubscriberRoleT);
-
-    }
-    Connector __cmd_vel_mux__parameter_descriptionstopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
-
-        }
-
-        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
-
-        Property name : string = "/cmd_vel_mux/parameter_descriptions";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -2118,9 +1810,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "sensor_msgs/PointCloud2";
+        Property topic : string = "/move_base/DWAPlannerROS/trajectory_cloud";
 
-        Property name : string = "/move_base/DWAPlannerROS/trajectory_cloud";
+        Property msg_type : string = "sensor_msgs/PointCloud2";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -2146,37 +1838,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
+        Property topic : string = "/move_base/DWAPlannerROS/parameter_descriptions";
+
         Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
-
-        Property name : string = "/move_base/DWAPlannerROS/parameter_descriptions";
-        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
-            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
-                (p.topic == self.topic AND p.msg_type == self.msg_type);
-        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
-            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
-                (p.topic == self.topic AND p.msg_type == self.msg_type);
-        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
-            declaresType(r, AnnouncerRoleT);
-        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
-            declaresType(r, ReceiverRoleT);
-        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
-            declaresType(r, PublisherRoleT);
-        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
-            declaresType(r, SubscriberRoleT);
-
-    }
-    Connector __cmd_vel_mux__parameter_updatestopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
-
-        }
-
-        Property msg_type : string = "dynamic_reconfigure/Config";
-
-        Property name : string = "/cmd_vel_mux/parameter_updates";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -2194,7 +1858,7 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Connector __move_base__global_costmap__obstacle_layer_footprint__parameter_updatestopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicAdvertiserRoleT9 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+        Role ROSTopicAdvertiserRoleT6 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
             rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
                 declaresType(a, AnnouncePortT);
             rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
@@ -2202,9 +1866,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "dynamic_reconfigure/Config";
+        Property topic : string = "/move_base/global_costmap/obstacle_layer_footprint/parameter_updates";
 
-        Property name : string = "/move_base/global_costmap/obstacle_layer_footprint/parameter_updates";
+        Property msg_type : string = "dynamic_reconfigure/Config";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -2230,9 +1894,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "geometry_msgs/PolygonStamped";
+        Property topic : string = "/move_base/local_costmap/obstacle_layer_footprint/footprint_stamped";
 
-        Property name : string = "/move_base/local_costmap/obstacle_layer_footprint/footprint_stamped";
+        Property msg_type : string = "geometry_msgs/PolygonStamped";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -2250,13 +1914,6 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Connector __cmd_vel_mux__input__navitopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicSubscriberRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
-
-        }
         Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
             rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
                 declaresType(a, AnnouncePortT);
@@ -2265,9 +1922,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "geometry_msgs/Twist";
+        Property topic : string = "/cmd_vel_mux/input/navi";
 
-        Property name : string = "/cmd_vel_mux/input/navi";
+        Property msg_type : string = "geometry_msgs/Twist";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -2293,9 +1950,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "move_base_msgs/MoveBaseActionFeedback";
+        Property topic : string = "/move_base/feedback";
 
-        Property name : string = "/move_base/feedback";
+        Property msg_type : string = "move_base_msgs/MoveBaseActionFeedback";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -2321,9 +1978,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "geometry_msgs/PolygonStamped";
+        Property topic : string = "/move_base/global_costmap/obstacle_layer_footprint/footprint_stamped";
 
-        Property name : string = "/move_base/global_costmap/obstacle_layer_footprint/footprint_stamped";
+        Property msg_type : string = "geometry_msgs/PolygonStamped";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -2349,9 +2006,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "sensor_msgs/PointCloud2";
+        Property topic : string = "/move_base/DWAPlannerROS/cost_cloud";
 
-        Property name : string = "/move_base/DWAPlannerROS/cost_cloud";
+        Property msg_type : string = "sensor_msgs/PointCloud2";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -2377,9 +2034,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+        Property topic : string = "/navigation_velocity_smoother/parameter_descriptions";
 
-        Property name : string = "/navigation_velocity_smoother/parameter_descriptions";
+        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -2405,9 +2062,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "dynamic_reconfigure/Config";
+        Property topic : string = "/move_base/global_costmap/inflation_layer/parameter_updates";
 
-        Property name : string = "/move_base/global_costmap/inflation_layer/parameter_updates";
+        Property msg_type : string = "dynamic_reconfigure/Config";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -2425,34 +2082,6 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Connector __move_base__parameter_descriptionstopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicAdvertiserRoleT9 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
-
-        }
-
-        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
-
-        Property name : string = "/move_base/parameter_descriptions";
-        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
-            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
-                (p.topic == self.topic AND p.msg_type == self.msg_type);
-        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
-            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
-                (p.topic == self.topic AND p.msg_type == self.msg_type);
-        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
-            declaresType(r, AnnouncerRoleT);
-        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
-            declaresType(r, ReceiverRoleT);
-        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
-            declaresType(r, PublisherRoleT);
-        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
-            declaresType(r, SubscriberRoleT);
-
-    }
-    Connector __cmd_vel_mux__activetopic : TopicConnectorT = new TopicConnectorT extended with {
         Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
             rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
                 declaresType(a, AnnouncePortT);
@@ -2461,9 +2090,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "std_msgs/String";
+        Property topic : string = "/move_base/parameter_descriptions";
 
-        Property name : string = "/cmd_vel_mux/active";
+        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -2489,9 +2118,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "dynamic_reconfigure/Config";
+        Property topic : string = "/move_base/parameter_updates";
 
-        Property name : string = "/move_base/parameter_updates";
+        Property msg_type : string = "dynamic_reconfigure/Config";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -2517,9 +2146,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "map_msgs/OccupancyGridUpdate";
+        Property topic : string = "/move_base/global_costmap/costmap_updates";
 
-        Property name : string = "/move_base/global_costmap/costmap_updates";
+        Property msg_type : string = "map_msgs/OccupancyGridUpdate";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -2537,7 +2166,7 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Connector __move_base__local_costmap__obstacle_layer__clearing_endpointstopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicAdvertiserRoleT9 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+        Role ROSTopicAdvertiserRoleT6 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
             rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
                 declaresType(a, AnnouncePortT);
             rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
@@ -2545,9 +2174,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "sensor_msgs/PointCloud";
+        Property topic : string = "/move_base/local_costmap/obstacle_layer/clearing_endpoints";
 
-        Property name : string = "/move_base/local_costmap/obstacle_layer/clearing_endpoints";
+        Property msg_type : string = "sensor_msgs/PointCloud";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -2572,7 +2201,7 @@ System Turtlebot : ROSFam = new ROSFam extended with {
                 declaresType(p, PublishPortT);
 
         }
-        Role ROSTopicAdvertiserRoleT9 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+        Role ROSTopicAdvertiserRoleT6 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
             rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
                 declaresType(a, AnnouncePortT);
             rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
@@ -2580,9 +2209,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "move_base_msgs/MoveBaseActionGoal";
+        Property topic : string = "/move_base/goal";
 
-        Property name : string = "/move_base/goal";
+        Property msg_type : string = "move_base_msgs/MoveBaseActionGoal";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -2608,9 +2237,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "dynamic_reconfigure/Config";
+        Property topic : string = "/move_base/global_costmap/static_layer/parameter_updates";
 
-        Property name : string = "/move_base/global_costmap/static_layer/parameter_updates";
+        Property msg_type : string = "dynamic_reconfigure/Config";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -2628,7 +2257,7 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Connector __move_base__global_costmap__obstacle_layer__parameter_descriptionstopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicAdvertiserRoleT9 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+        Role ROSTopicAdvertiserRoleT6 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
             rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
                 declaresType(a, AnnouncePortT);
             rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
@@ -2636,9 +2265,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+        Property topic : string = "/move_base/global_costmap/obstacle_layer/parameter_descriptions";
 
-        Property name : string = "/move_base/global_costmap/obstacle_layer/parameter_descriptions";
+        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -2656,7 +2285,7 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Connector __move_base__local_costmap__obstacle_layer__parameter_updatestopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicAdvertiserRoleT9 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+        Role ROSTopicAdvertiserRoleT6 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
             rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
                 declaresType(a, AnnouncePortT);
             rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
@@ -2664,9 +2293,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "dynamic_reconfigure/Config";
+        Property topic : string = "/move_base/local_costmap/obstacle_layer/parameter_updates";
 
-        Property name : string = "/move_base/local_costmap/obstacle_layer/parameter_updates";
+        Property msg_type : string = "dynamic_reconfigure/Config";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -2692,9 +2321,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "nav_msgs/MapMetaData";
+        Property topic : string = "/map_metadata";
 
-        Property name : string = "/map_metadata";
+        Property msg_type : string = "nav_msgs/MapMetaData";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -2741,9 +2370,9 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property msg_type : string = "tf2_msgs/TFMessage";
+        Property topic : string = "/tf";
 
-        Property name : string = "/tf";
+        Property msg_type : string = "tf2_msgs/TFMessage";
         rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
                 (p.topic == self.topic AND p.msg_type == self.msg_type);
@@ -2764,92 +2393,76 @@ System Turtlebot : ROSFam = new ROSFam extended with {
     Attachment __amclnode.sport1 to __maptopic.ROSTopicSubscriberRoleT0;
     Attachment __amclnode.pport0 to __amcl_posetopic.ROSTopicAdvertiserRoleT0;
     Attachment __amclnode.pport1 to __tftopic.ROSTopicAdvertiserRoleT0;
-    Attachment __amclnode.pport2 to __amcl__parameter_updatestopic.ROSTopicAdvertiserRoleT0;
-    Attachment __amclnode.pport3 to __particlecloudtopic.ROSTopicAdvertiserRoleT0;
-    Attachment __amclnode.pport4 to __rosouttopic.ROSTopicAdvertiserRoleT0;
+    Attachment __amclnode.pport2 to __particlecloudtopic.ROSTopicAdvertiserRoleT0;
+    Attachment __amclnode.pport3 to __rosouttopic.ROSTopicAdvertiserRoleT0;
+    Attachment __amclnode.pport4 to __amcl__parameter_updatestopic.ROSTopicAdvertiserRoleT0;
     Attachment __amclnode.pport5 to __amcl__parameter_descriptionstopic.ROSTopicAdvertiserRoleT0;
-    Attachment __cmd_vel_muxnode.sport0 to __mobile_base_nodelet_manager__bondtopic.ROSTopicSubscriberRoleT0;
-    Attachment __cmd_vel_muxnode.pport0 to __rosouttopic.ROSTopicAdvertiserRoleT1;
-    Attachment __cmd_vel_muxnode.pport1 to __mobile_base_nodelet_manager__bondtopic.ROSTopicAdvertiserRoleT1;
     Attachment __robot_state_publishernode.sport0 to __joint_statestopic.ROSTopicSubscriberRoleT0;
     Attachment __robot_state_publishernode.pport0 to __tftopic.ROSTopicAdvertiserRoleT1;
-    Attachment __robot_state_publishernode.pport1 to __rosouttopic.ROSTopicAdvertiserRoleT2;
-    Attachment __navigation_velocity_smoothernode.sport0 to __mobile_base_nodelet_manager__bondtopic.ROSTopicSubscriberRoleT1;
-    Attachment __navigation_velocity_smoothernode.pport0 to __rosouttopic.ROSTopicAdvertiserRoleT3;
-    Attachment __navigation_velocity_smoothernode.pport1 to __mobile_base_nodelet_manager__bondtopic.ROSTopicAdvertiserRoleT3;
+    Attachment __robot_state_publishernode.pport1 to __rosouttopic.ROSTopicAdvertiserRoleT1;
     Attachment __rosoutnode.sport0 to __rosouttopic.ROSTopicSubscriberRoleT0;
     Attachment __rosoutnode.pport0 to __rosout_aggtopic.ROSTopicAdvertiserRoleT0;
     Attachment __map_servernode.pport0 to __map_metadatatopic.ROSTopicAdvertiserRoleT0;
     Attachment __map_servernode.pport1 to __maptopic.ROSTopicAdvertiserRoleT0;
-    Attachment __map_servernode.pport2 to __rosouttopic.ROSTopicAdvertiserRoleT4;
+    Attachment __map_servernode.pport2 to __rosouttopic.ROSTopicAdvertiserRoleT2;
     Attachment __joint_state_publishernode.pport0 to __joint_statestopic.ROSTopicAdvertiserRoleT0;
-    Attachment __joint_state_publishernode.pport1 to __rosouttopic.ROSTopicAdvertiserRoleT5;
-    Attachment __kobuki_safety_controllernode.sport0 to __mobile_base_nodelet_manager__bondtopic.ROSTopicSubscriberRoleT2;
-    Attachment __kobuki_safety_controllernode.pport0 to __rosouttopic.ROSTopicAdvertiserRoleT6;
-    Attachment __kobuki_safety_controllernode.pport1 to __mobile_base_nodelet_manager__bondtopic.ROSTopicAdvertiserRoleT6;
-    Attachment __diagnostic_aggregatornode.pport0 to __rosouttopic.ROSTopicAdvertiserRoleT7;
-    Attachment __diagnostic_aggregatornode.pport1 to __diagnostics_toplevel_statetopic.ROSTopicAdvertiserRoleT7;
-    Attachment __diagnostic_aggregatornode.pport2 to __diagnostics_aggtopic.ROSTopicAdvertiserRoleT7;
-    Attachment __mobile_base_nodelet_managernode.sport0 to __cmd_vel_mux__input__safety_controllertopic.ROSTopicSubscriberRoleT0;
-    Attachment __mobile_base_nodelet_managernode.sport1 to __navigation_velocity_smoother__raw_cmd_veltopic.ROSTopicSubscriberRoleT0;
-    Attachment __mobile_base_nodelet_managernode.sport2 to __cmd_vel_mux__input__navitopic.ROSTopicSubscriberRoleT0;
-    Attachment __mobile_base_nodelet_managernode.sport3 to __mobile_base__commands__velocitytopic.ROSTopicSubscriberRoleT0;
-    Attachment __mobile_base_nodelet_managernode.sport4 to __mobile_base_nodelet_manager__bondtopic.ROSTopicSubscriberRoleT3;
-    Attachment __mobile_base_nodelet_managernode.pport0 to __cmd_vel_mux__parameter_descriptionstopic.ROSTopicAdvertiserRoleT0;
-    Attachment __mobile_base_nodelet_managernode.pport1 to __navigation_velocity_smoother__parameter_updatestopic.ROSTopicAdvertiserRoleT0;
-    Attachment __mobile_base_nodelet_managernode.pport2 to __cmd_vel_mux__input__safety_controllertopic.ROSTopicAdvertiserRoleT0;
-    Attachment __mobile_base_nodelet_managernode.pport3 to __cmd_vel_mux__parameter_updatestopic.ROSTopicAdvertiserRoleT0;
-    Attachment __mobile_base_nodelet_managernode.pport4 to __cmd_vel_mux__activetopic.ROSTopicAdvertiserRoleT0;
-    Attachment __mobile_base_nodelet_managernode.pport5 to __cmd_vel_mux__input__navitopic.ROSTopicAdvertiserRoleT0;
-    Attachment __mobile_base_nodelet_managernode.pport6 to __navigation_velocity_smoother__parameter_descriptionstopic.ROSTopicAdvertiserRoleT0;
-    Attachment __mobile_base_nodelet_managernode.pport7 to __rosouttopic.ROSTopicAdvertiserRoleT8;
-    Attachment __mobile_base_nodelet_managernode.pport8 to __mobile_base__commands__velocitytopic.ROSTopicAdvertiserRoleT8;
-    Attachment __mobile_base_nodelet_managernode.pport9 to __mobile_base_nodelet_manager__bondtopic.ROSTopicAdvertiserRoleT8;
+    Attachment __joint_state_publishernode.pport1 to __rosouttopic.ROSTopicAdvertiserRoleT3;
+    Attachment __diagnostic_aggregatornode.pport0 to __rosouttopic.ROSTopicAdvertiserRoleT4;
+    Attachment __diagnostic_aggregatornode.pport1 to __diagnostics_toplevel_statetopic.ROSTopicAdvertiserRoleT4;
+    Attachment __diagnostic_aggregatornode.pport2 to __diagnostics_aggtopic.ROSTopicAdvertiserRoleT4;
+    Attachment __mobile_base_nodelet_managernode.sport0 to __navigation_velocity_smoother__raw_cmd_veltopic.ROSTopicSubscriberRoleT0;
+    Attachment __mobile_base_nodelet_managernode.sport1 to __mobile_base_nodelet_manager__bondtopic.ROSTopicSubscriberRoleT0;
+    Attachment __mobile_base_nodelet_managernode.pport0 to __navigation_velocity_smoother__parameter_updatestopic.ROSTopicAdvertiserRoleT0;
+    Attachment __mobile_base_nodelet_managernode.pport1 to __cmd_vel_mux__input__safety_controllertopic.ROSTopicAdvertiserRoleT0;
+    Attachment __mobile_base_nodelet_managernode.pport2 to __navigation_velocity_smoother__parameter_descriptionstopic.ROSTopicAdvertiserRoleT0;
+    Attachment __mobile_base_nodelet_managernode.pport3 to __cmd_vel_mux__input__navitopic.ROSTopicAdvertiserRoleT0;
+    Attachment __mobile_base_nodelet_managernode.pport4 to __rosouttopic.ROSTopicAdvertiserRoleT5;
+    Attachment __mobile_base_nodelet_managernode.pport5 to __mobile_base_nodelet_manager__bondtopic.ROSTopicAdvertiserRoleT5;
     Attachment __move_basenode.sport0 to __tftopic.ROSTopicSubscriberRoleT1;
     Attachment __move_basenode.sport1 to __maptopic.ROSTopicSubscriberRoleT1;
     Attachment __move_basenode.sport2 to __move_base__goaltopic.ROSTopicSubscriberRoleT1;
     Attachment __move_basenode.pport0 to __move_base__global_costmap__costmap_updatestopic.ROSTopicAdvertiserRoleT0;
     Attachment __move_basenode.pport1 to __move_base__current_goaltopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport2 to __move_base__local_costmap__inflation_layer__parameter_descriptionstopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport3 to __move_base__feedbacktopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport4 to __move_base__global_costmap__parameter_updatestopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport5 to __move_base__local_costmap__costmaptopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport6 to __move_base__global_costmap__static_layer__parameter_updatestopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport7 to __move_base__global_costmap__obstacle_layer_footprint__footprint_stampedtopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport8 to __navigation_velocity_smoother__raw_cmd_veltopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport9 to __move_base__local_costmap__inflation_layer__parameter_updatestopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport10 to __move_base__local_costmap__obstacle_layer_footprint__parameter_updatestopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport11 to __move_base__global_costmap__static_layer__parameter_descriptionstopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport12 to __move_base__local_costmap__costmap_updatestopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport13 to __move_base__NavfnROS__plantopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport14 to __move_base__local_costmap__parameter_descriptionstopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport15 to __move_base__DWAPlannerROS__parameter_descriptionstopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport16 to __move_base__DWAPlannerROS__trajectory_cloudtopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport17 to __move_base__parameter_updatestopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport18 to __move_base__statustopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport19 to __move_base__global_costmap__inflation_layer__parameter_updatestopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport20 to __move_base__global_costmap__costmaptopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport21 to __move_base__global_costmap__obstacle_layer__clearing_endpointstopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport22 to __move_base__local_costmap__obstacle_layer_footprint__parameter_descriptionstopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport23 to __move_base__local_costmap__parameter_updatestopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport24 to __move_base__DWAPlannerROS__cost_cloudtopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport25 to __move_base__local_costmap__obstacle_layer_footprint__footprint_stampedtopic.ROSTopicAdvertiserRoleT0;
-    Attachment __move_basenode.pport26 to __rosouttopic.ROSTopicAdvertiserRoleT9;
-    Attachment __move_basenode.pport27 to __move_base__global_costmap__obstacle_layer_footprint__parameter_updatestopic.ROSTopicAdvertiserRoleT9;
-    Attachment __move_basenode.pport28 to __move_base__local_costmap__obstacle_layer__parameter_descriptionstopic.ROSTopicAdvertiserRoleT9;
-    Attachment __move_basenode.pport29 to __move_base__goaltopic.ROSTopicAdvertiserRoleT9;
-    Attachment __move_basenode.pport30 to __move_base__local_costmap__obstacle_layer__parameter_updatestopic.ROSTopicAdvertiserRoleT9;
-    Attachment __move_basenode.pport31 to __move_base__local_costmap__obstacle_layer__clearing_endpointstopic.ROSTopicAdvertiserRoleT9;
-    Attachment __move_basenode.pport32 to __move_base__DWAPlannerROS__global_plantopic.ROSTopicAdvertiserRoleT9;
-    Attachment __move_basenode.pport33 to __move_base__DWAPlannerROS__local_plantopic.ROSTopicAdvertiserRoleT9;
-    Attachment __move_basenode.pport34 to __move_base__global_costmap__inflation_layer__parameter_descriptionstopic.ROSTopicAdvertiserRoleT9;
-    Attachment __move_basenode.pport35 to __move_base__global_costmap__obstacle_layer__parameter_descriptionstopic.ROSTopicAdvertiserRoleT9;
-    Attachment __move_basenode.pport36 to __move_base__parameter_descriptionstopic.ROSTopicAdvertiserRoleT9;
-    Attachment __move_basenode.pport37 to __move_base__global_costmap__obstacle_layer_footprint__parameter_descriptionstopic.ROSTopicAdvertiserRoleT9;
-    Attachment __move_basenode.pport38 to __move_base__resulttopic.ROSTopicAdvertiserRoleT9;
-    Attachment __move_basenode.pport39 to __move_base__global_costmap__obstacle_layer__parameter_updatestopic.ROSTopicAdvertiserRoleT9;
-    Attachment __move_basenode.pport40 to __move_base__global_costmap__parameter_descriptionstopic.ROSTopicAdvertiserRoleT9;
-    Attachment __move_basenode.pport41 to __move_base__DWAPlannerROS__parameter_updatestopic.ROSTopicAdvertiserRoleT9;
+    Attachment __move_basenode.pport2 to __move_base__parameter_descriptionstopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport3 to __move_base__local_costmap__inflation_layer__parameter_descriptionstopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport4 to __move_base__feedbacktopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport5 to __move_base__global_costmap__parameter_updatestopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport6 to __move_base__local_costmap__costmaptopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport7 to __move_base__global_costmap__static_layer__parameter_updatestopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport8 to __move_base__global_costmap__obstacle_layer_footprint__footprint_stampedtopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport9 to __navigation_velocity_smoother__raw_cmd_veltopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport10 to __move_base__local_costmap__inflation_layer__parameter_updatestopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport11 to __move_base__local_costmap__obstacle_layer_footprint__parameter_updatestopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport12 to __move_base__global_costmap__static_layer__parameter_descriptionstopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport13 to __move_base__local_costmap__costmap_updatestopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport14 to __move_base__NavfnROS__plantopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport15 to __move_base__local_costmap__parameter_descriptionstopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport16 to __move_base__DWAPlannerROS__parameter_descriptionstopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport17 to __move_base__DWAPlannerROS__trajectory_cloudtopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport18 to __move_base__parameter_updatestopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport19 to __move_base__statustopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport20 to __move_base__global_costmap__inflation_layer__parameter_updatestopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport21 to __move_base__global_costmap__costmaptopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport22 to __move_base__global_costmap__obstacle_layer__clearing_endpointstopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport23 to __move_base__local_costmap__obstacle_layer_footprint__parameter_descriptionstopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport24 to __move_base__local_costmap__parameter_updatestopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport25 to __move_base__DWAPlannerROS__cost_cloudtopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport26 to __move_base__local_costmap__obstacle_layer_footprint__footprint_stampedtopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport27 to __rosouttopic.ROSTopicAdvertiserRoleT6;
+    Attachment __move_basenode.pport28 to __move_base__global_costmap__obstacle_layer_footprint__parameter_updatestopic.ROSTopicAdvertiserRoleT6;
+    Attachment __move_basenode.pport29 to __move_base__local_costmap__obstacle_layer__parameter_descriptionstopic.ROSTopicAdvertiserRoleT6;
+    Attachment __move_basenode.pport30 to __move_base__goaltopic.ROSTopicAdvertiserRoleT6;
+    Attachment __move_basenode.pport31 to __move_base__local_costmap__obstacle_layer__parameter_updatestopic.ROSTopicAdvertiserRoleT6;
+    Attachment __move_basenode.pport32 to __move_base__local_costmap__obstacle_layer__clearing_endpointstopic.ROSTopicAdvertiserRoleT6;
+    Attachment __move_basenode.pport33 to __move_base__DWAPlannerROS__global_plantopic.ROSTopicAdvertiserRoleT6;
+    Attachment __move_basenode.pport34 to __move_base__DWAPlannerROS__local_plantopic.ROSTopicAdvertiserRoleT6;
+    Attachment __move_basenode.pport35 to __move_base__global_costmap__inflation_layer__parameter_descriptionstopic.ROSTopicAdvertiserRoleT6;
+    Attachment __move_basenode.pport36 to __move_base__global_costmap__obstacle_layer__parameter_descriptionstopic.ROSTopicAdvertiserRoleT6;
+    Attachment __move_basenode.pport37 to __move_base__global_costmap__obstacle_layer_footprint__parameter_descriptionstopic.ROSTopicAdvertiserRoleT6;
+    Attachment __move_basenode.pport38 to __move_base__resulttopic.ROSTopicAdvertiserRoleT6;
+    Attachment __move_basenode.pport39 to __move_base__global_costmap__obstacle_layer__parameter_updatestopic.ROSTopicAdvertiserRoleT6;
+    Attachment __move_basenode.pport40 to __move_base__global_costmap__parameter_descriptionstopic.ROSTopicAdvertiserRoleT6;
+    Attachment __move_basenode.pport41 to __move_base__DWAPlannerROS__parameter_updatestopic.ROSTopicAdvertiserRoleT6;
     rule topicsMatch = heuristic forall s :! TopicSubscribePortT in /self/COMPONENTS/PORTS:!TopicSubscribePortT | 
         exists p :! TopicAdvertisePortT in /self/COMPONENTS/PORTS:!TopicAdvertisePortT | 
             (s.topic == p.topic AND s.msg_type == p.msg_type);
