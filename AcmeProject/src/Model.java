@@ -54,7 +54,7 @@ public class Model {
     public void createConnectors() {
         for (Topic topic : topicArrayList) {
             Connector connector = new Connector(system, topic.getName());
-            connector.addStringTypeProperty("name", topic.getOriginalName());
+            connector.addStringTypeProperty("topic", topic.getOriginalName());
             connector.addStringTypeProperty("msg_type", topic.getMsg_Type());
             connectorArrayList.add(connector);
         }
