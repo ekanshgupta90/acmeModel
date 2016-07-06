@@ -1063,11 +1063,11 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Connector __navigation_velocity_smoother__raw_cmd_veltopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicSubscriberRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
+        Role ROSTopicSubscriberRoleT0 : ROSTopicSubscriberRoleT = new ROSTopicSubscriberRoleT extended with {
+            rule attachedOnlyToReceivePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, ReceivePortT);
+            rule attachedToSubscribePortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, SubscribePortT);
 
         }
         Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
@@ -1266,11 +1266,11 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Connector __maptopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicSubscriberRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
+        Role ROSTopicSubscriberRoleT0 : ROSTopicSubscriberRoleT = new ROSTopicSubscriberRoleT extended with {
+            rule attachedOnlyToReceivePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, ReceivePortT);
+            rule attachedToSubscribePortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, SubscribePortT);
 
         }
         Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
@@ -1280,11 +1280,11 @@ System Turtlebot : ROSFam = new ROSFam extended with {
                 declaresType(p, PublishPortT);
 
         }
-        Role ROSTopicSubscriberRoleT1 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
+        Role ROSTopicSubscriberRoleT1 : ROSTopicSubscriberRoleT = new ROSTopicSubscriberRoleT extended with {
+            rule attachedOnlyToReceivePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, ReceivePortT);
+            rule attachedToSubscribePortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, SubscribePortT);
 
         }
 
@@ -1588,11 +1588,11 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Connector __mobile_base_nodelet_manager__bondtopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicSubscriberRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
+        Role ROSTopicSubscriberRoleT0 : ROSTopicSubscriberRoleT = new ROSTopicSubscriberRoleT extended with {
+            rule attachedOnlyToReceivePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, ReceivePortT);
+            rule attachedToSubscribePortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, SubscribePortT);
 
         }
         Role ROSTopicAdvertiserRoleT5 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
@@ -1665,11 +1665,11 @@ System Turtlebot : ROSFam = new ROSFam extended with {
                 declaresType(p, PublishPortT);
 
         }
-        Role ROSTopicSubscriberRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
+        Role ROSTopicSubscriberRoleT0 : ROSTopicSubscriberRoleT = new ROSTopicSubscriberRoleT extended with {
+            rule attachedOnlyToReceivePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, ReceivePortT);
+            rule attachedToSubscribePortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, SubscribePortT);
 
         }
         Role ROSTopicAdvertiserRoleT2 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
@@ -1756,11 +1756,11 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Connector __joint_statestopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicSubscriberRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
+        Role ROSTopicSubscriberRoleT0 : ROSTopicSubscriberRoleT = new ROSTopicSubscriberRoleT extended with {
+            rule attachedOnlyToReceivePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, ReceivePortT);
+            rule attachedToSubscribePortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, SubscribePortT);
 
         }
         Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
@@ -2519,11 +2519,11 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Connector __move_base__goaltopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicSubscriberRoleT1 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
+        Role ROSTopicSubscriberRoleT1 : ROSTopicSubscriberRoleT = new ROSTopicSubscriberRoleT extended with {
+            rule attachedOnlyToReceivePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, ReceivePortT);
+            rule attachedToSubscribePortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, SubscribePortT);
 
         }
         Role ROSTopicAdvertiserRoleT6 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
@@ -2666,11 +2666,11 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
     }
     Connector __tftopic : TopicConnectorT = new TopicConnectorT extended with {
-        Role ROSTopicSubscriberRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
+        Role ROSTopicSubscriberRoleT0 : ROSTopicSubscriberRoleT = new ROSTopicSubscriberRoleT extended with {
+            rule attachedOnlyToReceivePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, ReceivePortT);
+            rule attachedToSubscribePortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, SubscribePortT);
 
         }
         Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
@@ -2687,11 +2687,11 @@ System Turtlebot : ROSFam = new ROSFam extended with {
                 declaresType(p, PublishPortT);
 
         }
-        Role ROSTopicSubscriberRoleT1 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
-            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
-                declaresType(a, AnnouncePortT);
-            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
-                declaresType(p, PublishPortT);
+        Role ROSTopicSubscriberRoleT1 : ROSTopicSubscriberRoleT = new ROSTopicSubscriberRoleT extended with {
+            rule attachedOnlyToReceivePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, ReceivePortT);
+            rule attachedToSubscribePortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, SubscribePortT);
 
         }
 

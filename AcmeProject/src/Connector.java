@@ -30,7 +30,7 @@ public class Connector {
     public void addSubscriberRole(String name) {
 
         List<String> topicSubscriber = new ArrayList<>();
-        topicSubscriber.add("ROSTopicAdvertiserRoleT");
+        topicSubscriber.add("ROSTopicSubscriberRoleT");
 
         try {
             connector.getCommandFactory().roleCreateCommand(connector, name, topicSubscriber, topicSubscriber).execute();
