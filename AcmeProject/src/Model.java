@@ -1,7 +1,9 @@
 import com.oracle.javafx.jmx.json.JSONException;
+import org.acmestudio.acme.core.exception.AcmeException;
 import org.acmestudio.acme.core.exception.AcmeVisitorException;
 import org.acmestudio.acme.core.resource.IAcmeResource;
 import org.acmestudio.acme.core.resource.ParsingFailureException;
+import org.acmestudio.acme.element.IAcmeGroup;
 import org.acmestudio.acme.element.IAcmeSystem;
 import org.acmestudio.acme.model.IAcmeModel;
 import org.acmestudio.armani.ArmaniExportVisitor;
@@ -26,6 +28,8 @@ public class Model {
     private ArrayList<Topic> topicArrayList = new ArrayList<>();
     private ArrayList<Component> componentArrayList = new ArrayList<>();
     private ArrayList<Connector> connectorArrayList = new ArrayList<>();
+    private HashMap<Node, ArrayList<Node>> nodeletList = new HashMap<>();
+    private ArrayList<Group> groupArrayList = new ArrayList<>();
 
     public Model(String familyPath, String fileName, String systemName) {
         System.setProperty(StandaloneResourceProvider.FAMILY_SEARCH_PATH, familyPath);
@@ -42,12 +46,33 @@ public class Model {
     }
 
     public void createComponents() {
+
         for (Node node : nodeArrayList) {
             Component component = new Component(system, node.getName());
             component.addStringTypeProperty("name",node.getOriginalName());
             component.createSubscribers(system,node.getSubscribed(),connectorArrayList);
             component.createPublishers(system,node.getPublished(),connectorArrayList);
             componentArrayList.add(component);
+        }
+        int groupId = 0;
+
+        for(Node key: nodeletList.keySet()) {
+            groupId++;
+            Group group = new Group(system, "group" + String.valueOf(groupId));
+            for (Component component: componentArrayList) {
+                if (component.getName().equals(key.getName())) {
+                    group.addMember(system,component.getComponent());
+                }
+            }
+
+            for(Node node: nodeletList.get(key)){
+                for (Component component: componentArrayList) {
+                    if (component.getName().equals(node.getName())) {
+                        group.addMember(system,component.getComponent());
+                    }
+                }
+            }
+            groupArrayList.add(group);
         }
     }
 
@@ -100,7 +125,7 @@ public class Model {
 
 
     public void createTopicList(String t) {
-
+        topicArrayList = new ArrayList<>();
         JSONObject jObject = new JSONObject(t);
         Iterator<?> keys = jObject.keys();
 
@@ -112,11 +137,30 @@ public class Model {
         }
     }
 
-    public void createNodeList(JSONArray array) {
-
-        for (int i = 0; i < array.length(); i++) {
-            Node node = new Node(array.getString(i));
+    public void createNodeList(String t) throws JSONException {
+        nodeletList = new HashMap<>();
+        nodeArrayList = new ArrayList<>();
+        HashMap<String, ArrayList<String>> map = createMap(t);
+        ArrayList<String> array = map.get("nodes");
+        for (int i = 0; i < array.size(); i++) {
+            Node node = new Node(array.get(i));
             nodeArrayList.add(node);
+        }
+
+
+        for(String name: map.keySet()) {
+            if(!name.equals("nodes")) {
+                Node node = new Node(name);
+                nodeArrayList.add(node);
+                ArrayList<String> nodeletArray = map.get(name);
+                ArrayList<Node> nodlets = new ArrayList<>();
+                for (int i = 0; i < nodeletArray.size(); i++) {
+                    Node node1 = new Node(nodeletArray.get(i));
+                    nodeArrayList.add(node1);
+                    nodlets.add(node1);
+                }
+                nodeletList.put(node,nodlets);
+            }
         }
     }
 
@@ -176,7 +220,7 @@ public class Model {
 
     public void initialize( JSONObject jObject) {
         createTopicList(jObject.get("topics").toString());
-        createNodeList(jObject.getJSONArray("nodes"));
+        createNodeList(jObject.get("nodes").toString());
         addPublish(jObject.get("pub").toString());
         addSubscribe(jObject.get("sub").toString());
     }

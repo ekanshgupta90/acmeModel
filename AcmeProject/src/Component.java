@@ -170,4 +170,8 @@ public class Component {
         }
     }
 
+    public IAcmeComponent getComponent(){
+        return component;
+    }
+
 }

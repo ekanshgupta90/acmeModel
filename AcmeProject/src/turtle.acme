@@ -2,5 +2,15 @@ import ROSFam.acme;
  
 System Turtlebot : ROSFam = new ROSFam extended with {
 
+
+
+Group group1 = {
+
+}
+
+Group group2 = {
+
+}
+
 }
 
