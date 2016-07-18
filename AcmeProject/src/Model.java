@@ -218,11 +218,31 @@ public class Model {
 
     }
 
+
+    public void addServices(String t) throws JSONException {
+//        HashMap<String, ArrayList<String>> map = createMap(t);
+//        for (String nodeName : map.keySet()) {
+//            for (Node node : nodeArrayList) {
+//                if (node.getName().equals(nodeName + "node")) {
+//                    for (String topicName : map.get(nodeName)) {
+//                        for (Topic topic : topicArrayList) {
+//                            if (topic.getName().equals(topicName + "topic"))
+//                                node.addPublisher(topic);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+
+    }
+
+
     public void initialize( JSONObject jObject) {
         createTopicList(jObject.get("topics").toString());
         createNodeList(jObject.get("nodes").toString());
         addPublish(jObject.get("pub").toString());
         addSubscribe(jObject.get("sub").toString());
+        addServices(jObject.get("service").toString());
     }
 
 

@@ -174,4 +174,25 @@ public class Component {
         return component;
     }
 
+
+    public void addServiceProviderPort(String name) {
+        List<String> portTypeList = new ArrayList<>();
+        portTypeList.add("ServiceProviderPortT");
+        try {
+            component.getCommandFactory().portCreateCommand(component, name, portTypeList, portTypeList).execute();
+        } catch (AcmeException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addServiceClientPort(String name) {
+        List<String> portTypeList = new ArrayList<>();
+        portTypeList.add("ServiceClientPortT");
+        try {
+            component.getCommandFactory().portCreateCommand(component, name, portTypeList, portTypeList).execute();
+        } catch (AcmeException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
