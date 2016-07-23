@@ -2,7 +2,7 @@
 <AcmeModel>
   <family name="ROSFam">
     <userdata key="SaveData">
-      <data date="5/11/16 4:34 PM"/>
+      <data date="7/20/16 2:39 PM"/>
     </userdata>
     <userdata key="connection-patterns">
       <data>
@@ -58,7 +58,7 @@
             <shape outlineWidth="2" visualizationStrategyKey="org.acmestudio.ui.editor.diagram.visualization.strategy.OpenArrowStrategy">
               <fillColor blue="255" green="255" red="255"/>
               <outlineColor blue="0" green="0" red="0"/>
-              <size height="8" width="8"/>
+              <size height="9" width="9"/>
             </shape>
             <label rotation="0">
               <labelColor/>
@@ -172,38 +172,6 @@
           </visualization>
         </data>
       </userdata>
-    </component-type>
-    <component-type name="ROSLauncherCompT">
-      <userdata key="element-visualization">
-        <data>
-          <visualization hideFromPalette="false" type="COMPONENT">
-            <shape visualizationStrategyKey="org.acmestudio.ui.OvalVisualizationStrategy">
-              <fillColor blue="230" green="230" red="230"/>
-            </shape>
-            <label rotation="0">
-              <labelColor/>
-            </label>
-            <font/>
-            <representation>
-              <data>
-                <attribute key="repPortSize" type="string" val="ORIGINAL"/>
-              </data>
-            </representation>
-            <restrictPortType allowedTypes="" on="false"/>
-            <forcePortPlacement on="true">
-              <portPlacementRule alignment="Center" portType="Port" side="Default"/>
-            </forcePortPlacement>
-            <resizeToFitPorts on="false"/>
-          </visualization>
-        </data>
-      </userdata>
-      <component name="prototype">
-        <design-rule name="atLeastTheseTypes">
-          <userdata key="RuleInfo">
-            <data errMsg="Does not have ports of type LauncherPortT" label="Has ports of type LauncherPortT"/>
-          </userdata>
-        </design-rule>
-      </component>
     </component-type>
     <role-type name="ROSServiceCallerRoleT">
       <userdata key="element-visualization">
@@ -374,7 +342,7 @@
             <label rotation="0" source="Static Label" value="S">
               <labelColor/>
             </label>
-            <font bold="false" height="10" italics="false" name="Arial"/>
+            <font/>
             <representation>
               <data>
                 <attribute key="repPortSize" type="string" val="ORIGINAL"/>
@@ -425,6 +393,15 @@
         </data>
       </userdata>
     </connector-type>
+    <group-type name="ROSNodeManagerGroupT">
+      <group name="prototype">
+        <userdata key="GroupVisuals">
+          <data halign="2" label="%Property=name" linestyle="3" linewidth="3" rounded="true" valign="3">
+            <color blue="191" green="168" red="152"/>
+          </data>
+        </userdata>
+      </group>
+    </group-type>
     <system name="prototype">
       <userdata key="connection-patterns">
         <data>

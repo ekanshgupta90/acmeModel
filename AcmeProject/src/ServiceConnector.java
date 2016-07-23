@@ -7,19 +7,25 @@ import java.util.List;
 public class ServiceConnector {
 
     private IAcmeConnector connector;
+    private String name;
+    private String newName;
 
     public ServiceConnector(IAcmeSystem system, String name) {
 
         List<String> serviceTypeList = new ArrayList<>();
         serviceTypeList.add("ServiceConnT");
+        this.name = name;
+
+        String newName = new String(name.substring(0, name.length()).replace("/", "__"));
+        this.newName = newName;
 
         try {
-            system.getCommandFactory().connectorCreateCommand(system, name, serviceTypeList, serviceTypeList).execute();
+            system.getCommandFactory().connectorCreateCommand(system, newName, serviceTypeList, serviceTypeList).execute();
         } catch (AcmeException e) {
             e.printStackTrace();
         }
 
-        connector = system.getConnector(name);
+        connector = system.getConnector(newName);
     }
 
 
@@ -47,6 +53,13 @@ public class ServiceConnector {
         }
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public IAcmeRole getRole(String name) {
+        return connector.getRole(name);
+    }
 
 
 }

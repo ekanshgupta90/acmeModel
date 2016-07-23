@@ -30,27 +30,33 @@ public class Server {
         @Override
         public void handle(HttpExchange t) throws IOException {
 
-            InputStreamReader isr = new InputStreamReader(t.getRequestBody(), "utf-8");
-            BufferedReader br = new BufferedReader(isr);
-            int b;
-            StringBuilder buf = new StringBuilder(512);
-            while ((b = br.read()) != -1) {
-                buf.append((char) b);
+            try {
+                InputStreamReader isr = new InputStreamReader(t.getRequestBody(), "utf-8");
+                BufferedReader br = new BufferedReader(isr);
+                int b;
+                StringBuilder buf = new StringBuilder(512);
+                while ((b = br.read()) != -1) {
+                    buf.append((char) b);
+                }
+
+                br.close();
+                isr.close();
+
+                JSONObject jObject = new JSONObject(buf.toString());
+                model.initialize(jObject);
+                model.createModel();
+                model.writeToFile();
+
+                String response = "OK";
+                t.sendResponseHeaders(200, response.length());
+                OutputStream os = t.getResponseBody();
+                os.write(response.getBytes());
+                os.close();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
             }
 
-            br.close();
-            isr.close();
-
-            JSONObject jObject = new JSONObject(buf.toString());
-            model.initialize(jObject);
-            model.createModel();
-            model.writeToFile();
-
-            String response = "OK";
-            t.sendResponseHeaders(200, response.length());
-            OutputStream os = t.getResponseBody();
-            os.write(response.getBytes());
-            os.close();
 
         }
     }

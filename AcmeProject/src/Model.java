@@ -1,9 +1,7 @@
 import com.oracle.javafx.jmx.json.JSONException;
-import org.acmestudio.acme.core.exception.AcmeException;
 import org.acmestudio.acme.core.exception.AcmeVisitorException;
 import org.acmestudio.acme.core.resource.IAcmeResource;
 import org.acmestudio.acme.core.resource.ParsingFailureException;
-import org.acmestudio.acme.element.IAcmeGroup;
 import org.acmestudio.acme.element.IAcmeSystem;
 import org.acmestudio.acme.model.IAcmeModel;
 import org.acmestudio.armani.ArmaniExportVisitor;
@@ -16,9 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 
 public class Model {
 
@@ -30,6 +26,8 @@ public class Model {
     private ArrayList<Connector> connectorArrayList = new ArrayList<>();
     private HashMap<Node, ArrayList<Node>> nodeletList = new HashMap<>();
     private ArrayList<Group> groupArrayList = new ArrayList<>();
+    private ArrayList<Service> serviceArrayList = new ArrayList<>();
+    private ArrayList<ServiceConnector> serviceConnectors = new ArrayList<>();
 
     public Model(String familyPath, String fileName, String systemName) {
         System.setProperty(StandaloneResourceProvider.FAMILY_SEARCH_PATH, familyPath);
@@ -45,13 +43,14 @@ public class Model {
         system = model.getSystem(systemName);
     }
 
-    public void createComponents() {
+    public void createComponents() throws Exception{
 
         for (Node node : nodeArrayList) {
             Component component = new Component(system, node.getName());
             component.addStringTypeProperty("name",node.getOriginalName());
             component.createSubscribers(system,node.getSubscribed(),connectorArrayList);
             component.createPublishers(system,node.getPublished(),connectorArrayList);
+            component.createServiceResponderPorts(system, node.getServices(), serviceConnectors);
             componentArrayList.add(component);
         }
         int groupId = 0;
@@ -59,34 +58,50 @@ public class Model {
         for(Node key: nodeletList.keySet()) {
             groupId++;
             Group group = new Group(system, "group" + String.valueOf(groupId));
-            for (Component component: componentArrayList) {
-                if (component.getName().equals(key.getName())) {
-                    group.addMember(system,component.getComponent());
-                }
-            }
+            List<String> nodeManager = new ArrayList<>();
+            nodeManager.add("ROSNodeManagerCompT");
+            Component component = new Component(system, key.getName(), nodeManager);
+            component.addStringTypeProperty("name", key.getOriginalName());
+            component.createSubscribers(system, key.getSubscribed(), connectorArrayList);
+            component.createPublishers(system, key.getPublished(), connectorArrayList);
+            component.createServiceResponderPorts(system, key.getServices(), serviceConnectors);
+            componentArrayList.add(component);
+            group.addMember(system, component.getComponent());
 
-            for(Node node: nodeletList.get(key)){
-                for (Component component: componentArrayList) {
-                    if (component.getName().equals(node.getName())) {
-                        group.addMember(system,component.getComponent());
-                    }
-                }
+            for (Node node : nodeletList.get(key)) {
+                List<String> nodeletType = new ArrayList<>();
+                nodeManager.add("ROSNodeletCompT");
+                Component nodelet = new Component(system, node.getName(), nodeletType);
+                nodelet.addStringTypeProperty("name", node.getOriginalName());
+                nodelet.createSubscribers(system, node.getSubscribed(), connectorArrayList);
+                nodelet.createPublishers(system, node.getPublished(), connectorArrayList);
+                nodelet.createServiceResponderPorts(system, node.getServices(), serviceConnectors);
+                componentArrayList.add(nodelet);
+                group.addMember(system, nodelet.getComponent());
             }
             groupArrayList.add(group);
         }
+
     }
 
-    public void createConnectors() {
+
+
+    public void createConnectors() throws  Exception{
         for (Topic topic : topicArrayList) {
             Connector connector = new Connector(system, topic.getName());
             connector.addStringTypeProperty("topic", topic.getOriginalName());
             connector.addStringTypeProperty("msg_type", topic.getMsg_Type());
             connectorArrayList.add(connector);
         }
+
+        for (Service service: serviceArrayList) {
+            ServiceConnector serviceConnector = new ServiceConnector(system, service.getName());
+            serviceConnectors.add(serviceConnector);
+        }
     }
 
 
-    public void createModel() {
+    public void createModel() throws  Exception{
         System.out.println("Started");
         createConnectors();
         createComponents();
@@ -124,7 +139,7 @@ public class Model {
     }
 
 
-    public void createTopicList(String t) {
+    public void createTopicList(String t) throws Exception {
         topicArrayList = new ArrayList<>();
         JSONObject jObject = new JSONObject(t);
         Iterator<?> keys = jObject.keys();
@@ -151,12 +166,12 @@ public class Model {
         for(String name: map.keySet()) {
             if(!name.equals("nodes")) {
                 Node node = new Node(name);
-                nodeArrayList.add(node);
+                //nodeArrayList.add(node);
                 ArrayList<String> nodeletArray = map.get(name);
                 ArrayList<Node> nodlets = new ArrayList<>();
                 for (int i = 0; i < nodeletArray.size(); i++) {
                     Node node1 = new Node(nodeletArray.get(i));
-                    nodeArrayList.add(node1);
+                    //nodeArrayList.add(node1);
                     nodlets.add(node1);
                 }
                 nodeletList.put(node,nodlets);
@@ -184,7 +199,6 @@ public class Model {
     public void addPublish(String t) throws JSONException {
 
         HashMap<String, ArrayList<String>> map = createMap(t);
-
         for (String nodeName : map.keySet()) {
             for (Node node : nodeArrayList) {
                 if (node.getName().equals(nodeName + "node")) {
@@ -220,29 +234,92 @@ public class Model {
 
 
     public void addServices(String t) throws JSONException {
-//        HashMap<String, ArrayList<String>> map = createMap(t);
-//        for (String nodeName : map.keySet()) {
-//            for (Node node : nodeArrayList) {
-//                if (node.getName().equals(nodeName + "node")) {
-//                    for (String topicName : map.get(nodeName)) {
-//                        for (Topic topic : topicArrayList) {
-//                            if (topic.getName().equals(topicName + "topic"))
-//                                node.addPublisher(topic);
-//                        }
-//                    }
-//                }
-//            }
-//        }
+        try {
+            HashMap<String, ArrayList<String>> map = createMap(t);
+            for (Node node : nodeArrayList) {
+                for (String serviceName : map.keySet()) {
+                    if (node.getOriginalName().equals( "/" + (serviceName.split("/"))[1])) {
+                        ArrayList<String> data = map.get(serviceName);
+                        ArrayList<String> args = new ArrayList<>(Arrays.asList(data.get(1).split(" ")));
+                        Service service = new Service(serviceName, data.get(0), args);
+                        node.addService(service);
+                        serviceArrayList.add(service);
+                    }
+                }
+            }
 
+            for(Node key: nodeletList.keySet()) {
+                for (String serviceName : map.keySet()) {
+                    if (key.getOriginalName().equals("/" + (serviceName.split("/"))[1])) {
+                        ArrayList<String> data = map.get(serviceName);
+                        ArrayList<String> args = new ArrayList<>(Arrays.asList(data.get(1).split(" ")));
+                        Service service = new Service(serviceName, data.get(0), args);
+                        key.addService(service);
+                        serviceArrayList.add(service);
+                    }
+                }
+
+                for (Node node : nodeletList.get(key)) {
+                    for (String serviceName : map.keySet()) {
+                        if (node.getOriginalName().equals("/" + (serviceName.split("/"))[1])) {
+                            ArrayList<String> data = map.get(serviceName);
+                            ArrayList<String> args = new ArrayList<>(Arrays.asList(data.get(1).split(" ")));
+                            Service service = new Service(serviceName, data.get(0), args);
+                            node.addService(service);
+                            serviceArrayList.add(service);
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void addCalls(String t) {
+        JSONArray jsonarray = new JSONArray(t);
+        HashMap<String, String> map = new HashMap<>();
+        for(Object jsonObject : jsonarray) {
+            JSONObject jObject = new JSONObject((String) jsonObject);
+            Iterator<?> keys = jObject.keys();
+
+            while (keys.hasNext()) {
+                String key = (String) keys.next();
+                String value = jObject.getString(key);
+                map.put(key, value);
+            }
+        }
+        for (Component component: componentArrayList) {
+
+            if (("/" + component.getName().split("__")[1]).equals(map.get("client") + "node")) {
+                component.createServiceCallerPort(system, map.get("service_name"), serviceConnectors);
+            }
+        }
     }
 
 
     public void initialize( JSONObject jObject) {
-        createTopicList(jObject.get("topics").toString());
-        createNodeList(jObject.get("nodes").toString());
-        addPublish(jObject.get("pub").toString());
-        addSubscribe(jObject.get("sub").toString());
-        addServices(jObject.get("service").toString());
+
+        nodeArrayList = new ArrayList<>();
+        topicArrayList = new ArrayList<>();
+        nodeletList = new HashMap<>();
+        groupArrayList = new ArrayList<>();
+        serviceArrayList = new ArrayList<>();
+
+        try {
+            createTopicList(jObject.get("topics").toString());
+            createNodeList(jObject.get("nodes").toString());
+            addPublish(jObject.get("pub").toString());
+            addSubscribe(jObject.get("sub").toString());
+            addServices(jObject.get("service").toString());
+            addCalls(jObject.get("calls").toString());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 

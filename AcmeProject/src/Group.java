@@ -11,14 +11,13 @@ public class Group {
     private IAcmeGroup group;
 
     Group(IAcmeSystem system, String groupName ) {
-//        List<String> groupType = new ArrayList<>();
-//        groupType.add("");
-//        try {
-//            system.getCommandFactory().groupCreateCommand(system,groupName,groupType,groupType).execute();
-//        } catch (AcmeException e) {
-//            e.printStackTrace();
-//        }
-//        group = system.getGroup(groupName);
+        List<String> groupType = new ArrayList<>();
+        groupType.add("ROSNodeManagerGroupT");
+        try {
+            system.getCommandFactory().groupCreateCommand(system,groupName,groupType,groupType).execute();
+        } catch (AcmeException e) {
+            e.printStackTrace();
+        }
         group = system.getGroup(groupName);
     }
 

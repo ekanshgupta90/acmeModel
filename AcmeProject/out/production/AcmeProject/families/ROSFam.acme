@@ -24,19 +24,16 @@ family ROSFam extends LocalCallReturnFam, PubSubFam with {
   port type TopicSubscribePortT extends SubscribePortT with {
      property topic : string;
      property msg_type : string;
-     property queueSize : int; // in messages
-     property frequency: int; // hertz
+     property queueSize : int;
   };
   port type TopicAdvertisePortT extends PublishPortT with {
      property topic : string;
      property msg_type : string;
-     property queueSize : int; // in messages
-     property frequency: int; // hertz
+     property queueSize : int;
   };
-  port type LauncherPortT;
-  port type LauncherNodePortT;
 
   component type ROSNodeCompT = {
+    // Should the default logger ports be included here?
      property name : string;
 
      rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS |
@@ -47,8 +44,10 @@ family ROSFam extends LocalCallReturnFam, PubSubFam with {
          connected (req, resp);
   };
 
-  component type ROSLauncherCompT = {
-     rule atLeastTheseTypes = invariant exists e in self.PORTS | declaresType(e, LauncherPortT);
+
+  component type ROSNodeletCompT extends ROSNodeCompT;
+
+  component type ROSNodeManagerCompT extends ROSNodeCompT with {
   };
 
   role type ROSServiceCallerRoleT extends CallerRoleT;
@@ -62,17 +61,15 @@ family ROSFam extends LocalCallReturnFam, PubSubFam with {
         property topic : string;
         property msg_type : string;
 
-		// connector's topic matches the port's topic
         rule topicsMatchAdvertiser = invariant
           forall r :! ROSTopicAdvertiserRoleT in self.ROLES |
             forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS |
-              (p.topic == self.topic and p.msg_type == self.msg_type);
+              (p.topic == topic and p.msg_type == msg_type);
 
-		// connector's topic matches the port's topic
         rule topicsMatchSubscriber = invariant
           forall r :! ROSTopicSubscriberRoleT in self.ROLES |
             forall p :! TopicSubscribePortT in r.ATTACHEDPORTS |
-              (p.topic == self.topic and p.msg_type == self.msg_type);
+              (p.topic == topic and p.msg_type == msg_type);
   };
 
   // Service calls (on the client side) can be non-persistent (normal) and persistent.
@@ -83,23 +80,35 @@ family ROSFam extends LocalCallReturnFam, PubSubFam with {
   connector type ServiceConnT extends CallReturnConnT;
   connector type ActionServerConnT extends CallReturnConnT;
 
-  // for every subscriber of a kind, there should a publisher of this kind
-  rule topicsMatch = heuristic
+  group type ROSLauncherGroupT = {
+        rule onlyROSNodes = invariant forall m in self.MEMBERS | (declaresType (m, ROSNodeCompT) and !declaresType(m, ROSNodeletCompT));
+  };
+
+  group type ROSNodeManagerGroupT = {
+    property name : string;
+        rule onlyNodelets = invariant forall m in self.MEMBERS | (declaresType (m, ROSNodeletCompT) or declaresType(m,ROSNodeManagerCompT));
+        rule oneNodeManager = invariant exists unique m in self.MEMBERS | declaresType (m, ROSNodeManagerCompT);
+  };
+
+  rule allNodeletsInGroup = invariant forall n :! ROSNodeletCompT in self.COMPONENTS |
+    // Nodelets can only exist as members of a group, and it can only be one
+    // group
+    exists unique m :! ROSNodeManagerGroupT in self.GROUPS | contains (n, m.MEMBERS);
+
+  rule topicsMatch = invariant
     forall s :! TopicSubscribePortT in /self/COMPONENTS/PORTS:!TopicSubscribePortT |
       exists p :! TopicAdvertisePortT in /self/COMPONENTS/PORTS:!TopicAdvertisePortT |
         (s.topic == p.topic and s.msg_type == p.msg_type);
 
 
   // Only one bus with the same topic and msg_type, otherwise error
-  rule onlyOneBusForTopicAndMsg = invariant forall t1 :! TopicConnectorT in self.CONNECTORS |
-    forall t2 :! TopicConnectorT in self.CONNECTORS |
+  rule onlyOneBusForTopicAndMsg = invariant forall t1, t2 :! TopicConnectorT in self.CONNECTORS |
     ((t1.msg_type == t2.msg_type and t1.topic == t2.topic) <-> t1==t2);
 
 
   // There should only be one bus with the same topic - warning if different msg_types
-  rule onlyOneBusForTopic = heuristic forall t1 :! TopicConnectorT  in self.CONNECTORS | 
-    forall t2 :! TopicConnectorT in self.CONNECTORS |
-      (t1.topic == t2.topic) <-> t1 == t2;
+  rule onlyOneBusForTopic = heuristic forall t1, t2 :! TopicConnectorT in self.CONNECTORS |
+    (t1.topic == t2.topic) <-> t1 == t2;
 
   // No nodes should have the same name
   rule noDuplicateNodes = invariant forall n2 :! ROSNodeCompT in self.COMPONENTS |
