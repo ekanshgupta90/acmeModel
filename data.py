@@ -28,7 +28,7 @@ serviceExpeptions = []
 noServiceIntermediator = []
 oldnoServiceIntermediator = []
 
-URL = "http://192.168.0.13:8000/data"
+URL = "http://127.0.0.1:8000/data"
 
 
 def accumulate_action_topics(self, nodes_in, edges_in, node_connections):
