@@ -9,7 +9,10 @@ import org.acmestudio.standalone.resource.StandaloneResourceProvider;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.*;
 
@@ -48,7 +51,7 @@ public class Model {
         Component server = null;
         ServiceConnector serviceConnector = null;
 
-        if (! callsMap.isEmpty()) {
+        if (!callsMap.isEmpty()) {
             System.out.print(callsMap);
             for (Component component : componentArrayList) {
                 if (("/" + component.getName().split("__")[1]).equals(callsMap.get("client") + "node")) {
@@ -73,19 +76,19 @@ public class Model {
     }
 
 
-    public void createComponents() throws Exception{
+    public void createComponents() throws Exception {
 
         for (Node node : nodeArrayList) {
             Component component = new Component(system, node.getName());
-            component.addStringTypeProperty("name",node.getOriginalName());
-            component.createSubscribers(system,node.getSubscribed(),connectorArrayList);
-            component.createPublishers(system,node.getPublished(),connectorArrayList);
+            component.addStringTypeProperty("name", node.getOriginalName());
+            component.createSubscribers(system, node.getSubscribed(), connectorArrayList);
+            component.createPublishers(system, node.getPublished(), connectorArrayList);
             component.createServiceResponderPorts(system, node.getServices());
             componentArrayList.add(component);
         }
         int groupId = 0;
 
-        for(Node key: nodeletList.keySet()) {
+        for (Node key : nodeletList.keySet()) {
             groupId++;
             Group group = new Group(system, "group" + String.valueOf(groupId));
             group.addStringTypeProperty("name", key.getOriginalName());
@@ -116,8 +119,7 @@ public class Model {
     }
 
 
-
-    public void createConnectors() throws  Exception{
+    public void createConnectors() throws Exception {
         for (Topic topic : topicArrayList) {
             Connector connector = new Connector(system, topic.getName());
             connector.addStringTypeProperty("topic", topic.getOriginalName());
@@ -149,7 +151,7 @@ public class Model {
             e.printStackTrace();
         }
         try {
-            s.write(model.toString().getBytes(Charset.forName("UTF-8")),10,0);
+            s.write(model.toString().getBytes(Charset.forName("UTF-8")), 10, 0);
             s.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -194,8 +196,8 @@ public class Model {
         }
 
 
-        for(String name: map.keySet()) {
-            if(!name.equals("nodes")) {
+        for (String name : map.keySet()) {
+            if (!name.equals("nodes")) {
                 Node node = new Node(name);
                 ArrayList<String> nodeletArray = map.get(name);
                 ArrayList<Node> nodlets = new ArrayList<>();
@@ -203,7 +205,7 @@ public class Model {
                     Node node1 = new Node(nodeletArray.get(i));
                     nodlets.add(node1);
                 }
-                nodeletList.put(node,nodlets);
+                nodeletList.put(node, nodlets);
             }
         }
     }
@@ -267,7 +269,7 @@ public class Model {
             HashMap<String, ArrayList<String>> map = createMap(t);
             for (Node node : nodeArrayList) {
                 for (String serviceName : map.keySet()) {
-                    if (node.getOriginalName().equals( "/" + (serviceName.split("/"))[1])) {
+                    if (node.getOriginalName().equals("/" + (serviceName.split("/"))[1])) {
                         ArrayList<String> data = map.get(serviceName);
                         ArrayList<String> args = new ArrayList<>(Arrays.asList(data.get(1).split(" ")));
                         Service service = new Service(serviceName, data.get(0), args);
@@ -277,7 +279,7 @@ public class Model {
                 }
             }
 
-            for(Node key: nodeletList.keySet()) {
+            for (Node key : nodeletList.keySet()) {
                 for (String serviceName : map.keySet()) {
                     if (key.getOriginalName().equals("/" + (serviceName.split("/"))[1])) {
                         ArrayList<String> data = map.get(serviceName);
@@ -300,8 +302,7 @@ public class Model {
                     }
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -310,7 +311,7 @@ public class Model {
     public void addCalls(String t) {
         JSONArray jsonarray = new JSONArray(t);
         callsMap = new HashMap<>();
-        for(Object jsonObject : jsonarray) {
+        for (Object jsonObject : jsonarray) {
             JSONObject jObject = new JSONObject((String) jsonObject);
             Iterator<?> keys = jObject.keys();
 
@@ -323,7 +324,7 @@ public class Model {
     }
 
 
-    public void initialize( JSONObject jObject) {
+    public void initialize(JSONObject jObject) {
 
         nodeArrayList = new ArrayList<>();
         topicArrayList = new ArrayList<>();
@@ -339,8 +340,7 @@ public class Model {
             addSubscribe(jObject.get("sub").toString());
             addServices(jObject.get("service").toString());
             addCalls(jObject.get("calls").toString());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

@@ -1,5 +1,7 @@
 import org.acmestudio.acme.core.exception.AcmeException;
-import org.acmestudio.acme.element.*;
+import org.acmestudio.acme.element.IAcmeConnector;
+import org.acmestudio.acme.element.IAcmeRole;
+import org.acmestudio.acme.element.IAcmeSystem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +59,9 @@ public class ServiceConnector {
         return name;
     }
 
-    public String getConnectorName() { return  newName;}
+    public String getConnectorName() {
+        return newName;
+    }
 
     public IAcmeRole getRole(String name) {
         return connector.getRole(name);

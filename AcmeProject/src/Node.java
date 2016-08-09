@@ -21,7 +21,9 @@ public class Node {
         this.published.add(topic);
     }
 
-    public void addService(Service service) {this.services.add(service);}
+    public void addService(Service service) {
+        this.services.add(service);
+    }
 
     public String getName() {
         return this.name;
@@ -35,10 +37,12 @@ public class Node {
         return this.published;
     }
 
-    public List<Service> getServices() { return this.services;}
+    public List<Service> getServices() {
+        return this.services;
+    }
 
     public String getOriginalName() {
-        return this.name.substring(0, this.name.length()-4).replace("__", "/");
+        return this.name.substring(0, this.name.length() - 4).replace("__", "/");
     }
 
 }

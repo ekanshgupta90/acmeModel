@@ -666,7 +666,7 @@ System Turtlebot : ROSFam = new ROSFam extended with {
                 connected(req, resp);
 
     }
-    Component __handler_16451_1470706263642node : ROSNodeCompT = new ROSNodeCompT extended with {
+    Component __handler_34206_1470707606995node : ROSNodeCompT = new ROSNodeCompT extended with {
         Port pport0 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
 
             Property topic : string = "/rosout";
@@ -681,18 +681,6 @@ System Turtlebot : ROSFam = new ROSFam extended with {
         }
         Port serport0 : ServiceProviderPortT = new ServiceProviderPortT extended with {
 
-            Property svc_type : string = "roscpp/SetLoggerLevel";
-
-            Property args : string = "logger	level	";
-
-            Property name : string = "set_logger_level";
-            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
-            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
-                declaresType(r, ResponderRoleT);
-
-        }
-        Port serport1 : ServiceProviderPortT = new ServiceProviderPortT extended with {
-
             Property svc_type : string = "roscpp/GetLoggers";
 
             Property args : string = "	";
@@ -703,8 +691,20 @@ System Turtlebot : ROSFam = new ROSFam extended with {
                 declaresType(r, ResponderRoleT);
 
         }
+        Port serport1 : ServiceProviderPortT = new ServiceProviderPortT extended with {
 
-        Property name : string = "/handler_16451_1470706263642";
+            Property svc_type : string = "roscpp/SetLoggerLevel";
+
+            Property args : string = "logger	level	";
+
+            Property name : string = "set_logger_level";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+
+        Property name : string = "/handler_34206_1470707606995";
         rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
              ! exists resp :! ServiceProviderPortT in self.PORTS | 
                 connected(req, resp);
@@ -1202,77 +1202,6 @@ System Turtlebot : ROSFam = new ROSFam extended with {
                 connected(req, resp);
 
     }
-    Component __capability_server_nodelet_managernode : ROSNodeManagerCompT = new ROSNodeManagerCompT extended with {
-        Port serport0 : ServiceProviderPortT = new ServiceProviderPortT extended with {
-
-            Property svc_type : string = "roscpp/SetLoggerLevel";
-
-            Property args : string = "logger	level	";
-
-            Property name : string = "set_logger_level";
-            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
-            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
-                declaresType(r, ResponderRoleT);
-
-        }
-        Port serport1 : ServiceProviderPortT = new ServiceProviderPortT extended with {
-
-            Property svc_type : string = "nodelet/NodeletUnload";
-
-            Property args : string = "name	";
-
-            Property name : string = "unload_nodelet";
-            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
-            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
-                declaresType(r, ResponderRoleT);
-
-        }
-        Port serport2 : ServiceProviderPortT = new ServiceProviderPortT extended with {
-
-            Property svc_type : string = "roscpp/GetLoggers";
-
-            Property args : string = "	";
-
-            Property name : string = "get_loggers";
-            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
-            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
-                declaresType(r, ResponderRoleT);
-
-        }
-        Port serport3 : ServiceProviderPortT = new ServiceProviderPortT extended with {
-
-            Property svc_type : string = "nodelet/NodeletList";
-
-            Property args : string = "	";
-
-            Property name : string = "list";
-            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
-            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
-                declaresType(r, ResponderRoleT);
-
-        }
-        Port serport4 : ServiceProviderPortT = new ServiceProviderPortT extended with {
-
-            Property svc_type : string = "nodelet/NodeletLoad";
-
-            Property args : string = "name	type	remap_source_args	remap_target_args	my_argv	bond_id	";
-
-            Property name : string = "load_nodelet";
-            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
-            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
-                declaresType(r, ResponderRoleT);
-
-        }
-
-        Property name : string = "/capability_server_nodelet_manager";
-        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
-             ! exists resp :! ServiceProviderPortT in self.PORTS | 
-                connected(req, resp);
-        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
-             ! exists resp :! ActionServerPortT in self.PORTS | 
-                connected(req, resp);
-
-    }
     Component __mobile_base_nodelet_managernode : ROSNodeManagerCompT = new ROSNodeManagerCompT extended with {
         Port serport0 : ServiceProviderPortT = new ServiceProviderPortT extended with {
 
@@ -1543,7 +1472,100 @@ System Turtlebot : ROSFam = new ROSFam extended with {
                 connected(req, resp);
 
     }
-    Component __rosservice_22333_1470706291045node : ROSNodeCompT = new ROSNodeCompT extended with {
+    Component __capability_server_nodelet_managernode : ROSNodeManagerCompT = new ROSNodeManagerCompT extended with {
+        Port serport0 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/SetLoggerLevel";
+
+            Property args : string = "logger	level	";
+
+            Property name : string = "set_logger_level";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport1 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "nodelet/NodeletUnload";
+
+            Property args : string = "name	";
+
+            Property name : string = "unload_nodelet";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport2 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/GetLoggers";
+
+            Property args : string = "	";
+
+            Property name : string = "get_loggers";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport3 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "nodelet/NodeletList";
+
+            Property args : string = "	";
+
+            Property name : string = "list";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport4 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "nodelet/NodeletLoad";
+
+            Property args : string = "name	type	remap_source_args	remap_target_args	my_argv	bond_id	";
+
+            Property name : string = "load_nodelet";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+
+        Property name : string = "/capability_server_nodelet_manager";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __rosservice_37420_1470707625713node : ROSNodeCompT = new ROSNodeCompT extended with {
+
+        Property name : string = "/rosservice_37420_1470707625713";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __rosservice_37926_1470707629151node : ROSNodeCompT = new ROSNodeCompT extended with {
+
+        Property name : string = "/rosservice_37926_1470707629151";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __rosservice_38335_1470707631960node : ROSNodeCompT = new ROSNodeCompT extended with {
         Port callport0 : ServiceClientPortT = new ServiceClientPortT extended with {
 
             Property persistency = non-persistent;
@@ -1555,7 +1577,7 @@ System Turtlebot : ROSFam = new ROSFam extended with {
 
         }
 
-        Property name : string = "/rosservice_22333_1470706291045";
+        Property name : string = "/rosservice_38335_1470707631960";
         rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
              ! exists resp :! ServiceProviderPortT in self.PORTS | 
                 connected(req, resp);
@@ -2971,6 +2993,26 @@ System Turtlebot : ROSFam = new ROSFam extended with {
             declaresType(r, SubscriberRoleT);
 
     }
+    Connector __app_manager__list_rapps_prime : ServiceConnT = new ServiceConnT extended with {
+        Role ROSServiceResponderRoleT0 : ROSServiceResponderRoleT = new ROSServiceResponderRoleT extended with {
+            rule exactly1Attachment = heuristic size(self.ATTACHEDPORTS) == 1;
+            rule attachedOnlyToResponsePort = invariant forall p : Port in self.ATTACHEDPORTS | 
+                declaresType(p, ResponsePortT);
+
+        }
+        Role ROSServiceResponderRoleT1 : ROSServiceResponderRoleT = new ROSServiceResponderRoleT extended with {
+            rule exactly1Attachment = heuristic size(self.ATTACHEDPORTS) == 1;
+            rule attachedOnlyToResponsePort = invariant forall p : Port in self.ATTACHEDPORTS | 
+                declaresType(p, ResponsePortT);
+
+        }
+        rule exactly2Roles = invariant size(self.ROLES) == 2;
+        rule exactly1RoleOfTypeCallerRoleT = invariant exists r in self.ROLES | 
+            declaresType(r, CallerRoleT);
+        rule exactly1RoleOfTypeResponderRoleT = invariant exists r in self.ROLES | 
+            declaresType(r, ResponderRoleT);
+
+    }
     Connector __app_manager__platform_info_prime : ServiceConnT = new ServiceConnT extended with {
         Role ROSServiceResponderRoleT0 : ROSServiceResponderRoleT = new ROSServiceResponderRoleT extended with {
             rule exactly1Attachment = heuristic size(self.ATTACHEDPORTS) == 1;
@@ -3025,7 +3067,7 @@ System Turtlebot : ROSFam = new ROSFam extended with {
     Attachment __diagnostic_aggregatornode.pport0 to __rosouttopic.ROSTopicAdvertiserRoleT6;
     Attachment __diagnostic_aggregatornode.pport1 to __diagnostics_toplevel_statetopic.ROSTopicAdvertiserRoleT6;
     Attachment __diagnostic_aggregatornode.pport2 to __diagnostics_aggtopic.ROSTopicAdvertiserRoleT6;
-    Attachment __handler_16451_1470706263642node.pport0 to __rosouttopic.ROSTopicAdvertiserRoleT7;
+    Attachment __handler_34206_1470707606995node.pport0 to __rosouttopic.ROSTopicAdvertiserRoleT7;
     Attachment __move_basenode.sport0 to __tftopic.ROSTopicSubscriberRoleT1;
     Attachment __move_basenode.pport0 to __move_base__current_goaltopic.ROSTopicAdvertiserRoleT0;
     Attachment __move_basenode.pport1 to __navigation_velocity_smoother__raw_cmd_veltopic.ROSTopicAdvertiserRoleT0;
@@ -3039,20 +3081,12 @@ System Turtlebot : ROSFam = new ROSFam extended with {
     Attachment __app_managernode.pport2 to __rosouttopic.ROSTopicAdvertiserRoleT10;
     Attachment __app_managernode.pport3 to __app_manager__statustopic.ROSTopicAdvertiserRoleT10;
     Attachment __app_managernode.pport4 to __app_manager__rapp_listtopic.ROSTopicAdvertiserRoleT10;
+    Attachment __app_managernode.serport5 to __app_manager__list_rapps_prime.ROSServiceResponderRoleT0;
+    Attachment __app_managernode.serport5 to __app_manager__list_rapps_prime.ROSServiceResponderRoleT1;
     Attachment __app_managernode.serport0 to __app_manager__platform_info_prime.ROSServiceResponderRoleT0;
     Attachment __app_managernode.serport0 to __app_manager__platform_info_prime.ROSServiceResponderRoleT1;
-    Attachment __rosservice_22333_1470706291045node.callport0 to __app_manager__platform_info_prime.ROSServiceCallerRoleT0;
+    Attachment __rosservice_38335_1470707631960node.callport0 to __app_manager__platform_info_prime.ROSServiceCallerRoleT0;
     Group group1 : ROSNodeManagerGroupT = new ROSNodeManagerGroupT extended with {
-
-        Property name : string = "/capability_server_nodelet_manager";
-        rule onlyNodelets = invariant forall m in self.MEMBERS | 
-            (declaresType(m, ROSNodeletCompT) OR declaresType(m, ROSNodeManagerCompT));
-        rule oneNodeManager = invariant exists unique m in self.MEMBERS | 
-            declaresType(m, ROSNodeManagerCompT);
-        Members {__capability_server_nodelet_managernode}
-
-    }
-    Group group2 : ROSNodeManagerGroupT = new ROSNodeManagerGroupT extended with {
 
         Property name : string = "/mobile_base_nodelet_manager";
         rule onlyNodelets = invariant forall m in self.MEMBERS | 
@@ -3060,6 +3094,16 @@ System Turtlebot : ROSFam = new ROSFam extended with {
         rule oneNodeManager = invariant exists unique m in self.MEMBERS | 
             declaresType(m, ROSNodeManagerCompT);
         Members {__mobile_base_nodelet_managernode, __bumper2pointcloudnode, __cmd_vel_muxnode, __kobuki_safety_controllernode, __mobile_basenode, __navigation_velocity_smoothernode}
+
+    }
+    Group group2 : ROSNodeManagerGroupT = new ROSNodeManagerGroupT extended with {
+
+        Property name : string = "/capability_server_nodelet_manager";
+        rule onlyNodelets = invariant forall m in self.MEMBERS | 
+            (declaresType(m, ROSNodeletCompT) OR declaresType(m, ROSNodeManagerCompT));
+        rule oneNodeManager = invariant exists unique m in self.MEMBERS | 
+            declaresType(m, ROSNodeManagerCompT);
+        Members {__capability_server_nodelet_managernode}
 
     }
     rule allNodeletsInGroup = invariant forall n :! ROSNodeletCompT in self.COMPONENTS | 

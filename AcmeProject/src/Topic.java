@@ -14,8 +14,10 @@ public class Topic {
 
 
     public String getOriginalName() {
-        return this.name.substring(0, this.name.length()-5).replace("__", "/");
+        return this.name.substring(0, this.name.length() - 5).replace("__", "/");
     }
 
-    public String getMsg_Type() { return  this.msg_Type; }
+    public String getMsg_Type() {
+        return this.msg_Type;
+    }
 }

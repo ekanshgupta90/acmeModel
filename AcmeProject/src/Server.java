@@ -53,8 +53,7 @@ public class Server {
                 OutputStream os = t.getResponseBody();
                 os.write(response.getBytes());
                 os.close();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 

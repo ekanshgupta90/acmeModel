@@ -42,7 +42,6 @@ public class Component {
     }
 
 
-
     public void addSubscriberPort(String name) {
         List<String> portTypeList = new ArrayList<>();
         portTypeList.add("TopicSubscribePortT");
@@ -124,7 +123,7 @@ public class Component {
     }
 
 
-    public void createSubscribers(IAcmeSystem system, List<Topic> topics, ArrayList<Connector> connectorArrayList ) {
+    public void createSubscribers(IAcmeSystem system, List<Topic> topics, ArrayList<Connector> connectorArrayList) {
         int portNumber = 0;
         int roleNumber = 0;
         String portName = "sport";
@@ -150,13 +149,13 @@ public class Component {
                 }
             }
             addStringTypePropertytoPort(portName + portNumber, "msg_type", msg_type);
-            addStringTypePropertytoPort(portName + portNumber, "topic",topicName);
+            addStringTypePropertytoPort(portName + portNumber, "topic", topicName);
             portNumber++;
         }
     }
 
 
-    public void createPublishers(IAcmeSystem system, List<Topic> topics, ArrayList<Connector> connectorArrayList ) {
+    public void createPublishers(IAcmeSystem system, List<Topic> topics, ArrayList<Connector> connectorArrayList) {
         int portNumber = 0;
         int roleNumber = 0;
         String portName = "pport";
@@ -179,8 +178,8 @@ public class Component {
                     topicName = topic.getOriginalName();
                 }
             }
-            addStringTypePropertytoPort(portName + portNumber, "msg_type",msg_type);
-            addStringTypePropertytoPort(portName + portNumber, "topic",topicName);
+            addStringTypePropertytoPort(portName + portNumber, "msg_type", msg_type);
+            addStringTypePropertytoPort(portName + portNumber, "topic", topicName);
             portNumber++;
         }
     }
@@ -213,8 +212,7 @@ public class Component {
                     servicePortmap.put(service.getName(), portName + portNumber);
                 portNumber++;
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -224,13 +222,13 @@ public class Component {
         int roleNumber = 0;
         String roleName = "ROSServiceResponderRoleT";
 
-                while (connector.getRole(roleName + roleNumber) != null)
-                    roleNumber++;
+        while (connector.getRole(roleName + roleNumber) != null)
+            roleNumber++;
 
-                connector.addResponderRole(roleName + roleNumber);
-                IAcmeRole role = connector.getRole(roleName + roleNumber);
-                IAcmePort port = getPort(servicePortmap.get(serviceName));
-                Attachment attachment = new Attachment(system, port, role);
+        connector.addResponderRole(roleName + roleNumber);
+        IAcmeRole role = connector.getRole(roleName + roleNumber);
+        IAcmePort port = getPort(servicePortmap.get(serviceName));
+        Attachment attachment = new Attachment(system, port, role);
     }
 
 
@@ -241,23 +239,22 @@ public class Component {
         String roleName = "ROSServiceCallerRoleT";
 
         try {
-                addServiceClientPort(portName + portNumber);
-                IAcmePort port = getPort(portName + portNumber);
-                        while (connector.getRole(roleName + roleNumber) != null)
-                            roleNumber++;
+            addServiceClientPort(portName + portNumber);
+            IAcmePort port = getPort(portName + portNumber);
+            while (connector.getRole(roleName + roleNumber) != null)
+                roleNumber++;
 
-                        connector.addCallerRole(roleName + roleNumber);
-                        IAcmeRole role = connector.getRole(roleName + roleNumber);
-                        Attachment attachment = new Attachment(system, port, role);
-                addStringTypePropertytoPort(portName + portNumber, "name", serviceName);
-                portNumber++;
-        }
-        catch (Exception e) {
+            connector.addCallerRole(roleName + roleNumber);
+            IAcmeRole role = connector.getRole(roleName + roleNumber);
+            Attachment attachment = new Attachment(system, port, role);
+            addStringTypePropertytoPort(portName + portNumber, "name", serviceName);
+            portNumber++;
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public IAcmeComponent getComponent(){
+    public IAcmeComponent getComponent() {
         return component;
     }
 
