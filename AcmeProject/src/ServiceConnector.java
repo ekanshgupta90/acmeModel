@@ -57,6 +57,8 @@ public class ServiceConnector {
         return name;
     }
 
+    public String getConnectorName() { return  newName;}
+
     public IAcmeRole getRole(String name) {
         return connector.getRole(name);
     }

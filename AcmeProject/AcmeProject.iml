@@ -17,5 +17,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="acme.standalone-3.5.91" level="project" />
+    <orderEntry type="library" name="org.json:json:20160212" level="project" />
   </component>
 </module>

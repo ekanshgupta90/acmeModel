@@ -1,0 +1,3140 @@
+import ROSFam.acme;
+ 
+System Turtlebot : ROSFam = new ROSFam extended with {
+
+    Component __amclnode : ROSNodeCompT = new ROSNodeCompT extended with {
+        Port sport0 : TopicSubscribePortT = new TopicSubscribePortT extended with {
+
+            Property topic : string = "/tf";
+
+            Property msg_type : string = "tf2_msgs/TFMessage";
+            rule attachedOnlyToReceiverRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, ReceiverRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToSubscriberRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, SubscriberRoleT);
+
+        }
+        Port pport0 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/amcl_pose";
+
+            Property msg_type : string = "geometry_msgs/PoseWithCovarianceStamped";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport1 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/tf";
+
+            Property msg_type : string = "tf2_msgs/TFMessage";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport2 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/amcl/parameter_updates";
+
+            Property msg_type : string = "dynamic_reconfigure/Config";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport3 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/particlecloud";
+
+            Property msg_type : string = "geometry_msgs/PoseArray";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport4 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/rosout";
+
+            Property msg_type : string = "rosgraph_msgs/Log";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport5 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/amcl/parameter_descriptions";
+
+            Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port serport0 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/GetLoggers";
+
+            Property args : string = "	";
+
+            Property name : string = "get_loggers";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport1 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/SetLoggerLevel";
+
+            Property args : string = "logger	level	";
+
+            Property name : string = "set_logger_level";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport2 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "dynamic_reconfigure/Reconfigure";
+
+            Property args : string = "config	";
+
+            Property name : string = "set_parameters";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+
+        Property name : string = "/amcl";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __robot_state_publishernode : ROSNodeCompT = new ROSNodeCompT extended with {
+        Port sport0 : TopicSubscribePortT = new TopicSubscribePortT extended with {
+
+            Property topic : string = "/joint_states";
+
+            Property msg_type : string = "sensor_msgs/JointState";
+            rule attachedOnlyToReceiverRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, ReceiverRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToSubscriberRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, SubscriberRoleT);
+
+        }
+        Port pport0 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/tf";
+
+            Property msg_type : string = "tf2_msgs/TFMessage";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport1 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/rosout";
+
+            Property msg_type : string = "rosgraph_msgs/Log";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port serport0 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/GetLoggers";
+
+            Property args : string = "	";
+
+            Property name : string = "get_loggers";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport1 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/SetLoggerLevel";
+
+            Property args : string = "logger	level	";
+
+            Property name : string = "set_logger_level";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+
+        Property name : string = "/robot_state_publisher";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __rosoutnode : ROSNodeCompT = new ROSNodeCompT extended with {
+        Port sport0 : TopicSubscribePortT = new TopicSubscribePortT extended with {
+
+            Property topic : string = "/rosout";
+
+            Property msg_type : string = "rosgraph_msgs/Log";
+            rule attachedOnlyToReceiverRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, ReceiverRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToSubscriberRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, SubscriberRoleT);
+
+        }
+        Port pport0 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/rosout_agg";
+
+            Property msg_type : string = "rosgraph_msgs/Log";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port serport0 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/GetLoggers";
+
+            Property args : string = "	";
+
+            Property name : string = "get_loggers";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport1 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/SetLoggerLevel";
+
+            Property args : string = "logger	level	";
+
+            Property name : string = "set_logger_level";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+
+        Property name : string = "/rosout";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __zeroconf__zeroconfnode : ROSNodeCompT = new ROSNodeCompT extended with {
+        Port pport0 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/zeroconf/new_connections";
+
+            Property msg_type : string = "zeroconf_msgs/DiscoveredService";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport1 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/rosout";
+
+            Property msg_type : string = "rosgraph_msgs/Log";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport2 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/zeroconf/lost_connections";
+
+            Property msg_type : string = "zeroconf_msgs/DiscoveredService";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+
+        Property name : string = "/zeroconf/zeroconf";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __map_servernode : ROSNodeCompT = new ROSNodeCompT extended with {
+        Port pport0 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/map_metadata";
+
+            Property msg_type : string = "nav_msgs/MapMetaData";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport1 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/map";
+
+            Property msg_type : string = "nav_msgs/OccupancyGrid";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport2 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/rosout";
+
+            Property msg_type : string = "rosgraph_msgs/Log";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port serport0 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/SetLoggerLevel";
+
+            Property args : string = "logger	level	";
+
+            Property name : string = "set_logger_level";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport1 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/GetLoggers";
+
+            Property args : string = "	";
+
+            Property name : string = "get_loggers";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+
+        Property name : string = "/map_server";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __interactionsnode : ROSNodeCompT = new ROSNodeCompT extended with {
+        Port sport0 : TopicSubscribePortT = new TopicSubscribePortT extended with {
+
+            Property topic : string = "/app_manager/status";
+
+            Property msg_type : string = "rocon_app_manager_msgs/Status";
+            rule attachedOnlyToReceiverRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, ReceiverRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToSubscriberRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, SubscriberRoleT);
+
+        }
+        Port pport0 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/interactions/pairing";
+
+            Property msg_type : string = "rocon_interaction_msgs/Pair";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport1 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/interactions/interactive_clients";
+
+            Property msg_type : string = "rocon_interaction_msgs/InteractiveClients";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport2 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/rosout";
+
+            Property msg_type : string = "rosgraph_msgs/Log";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port serport0 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "rocon_interaction_msgs/GetInteractions";
+
+            Property args : string = "roles	uri	";
+
+            Property name : string = "get_interactions_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport1 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "rocon_interaction_msgs/SetInteractions";
+
+            Property args : string = "interactions	load	";
+
+            Property name : string = "set_interactions_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport2 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/GetLoggers";
+
+            Property args : string = "	";
+
+            Property name : string = "get_loggers";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport3 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/SetLoggerLevel";
+
+            Property args : string = "logger	level	";
+
+            Property name : string = "set_logger_level";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport4 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "rocon_interaction_msgs/RequestInteraction";
+
+            Property args : string = "remocon	hash	";
+
+            Property name : string = "request_interaction_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport5 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "rocon_interaction_msgs/GetInteraction";
+
+            Property args : string = "hash	";
+
+            Property name : string = "get_interaction_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport6 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "rocon_interaction_msgs/GetRoles";
+
+            Property args : string = "uri	";
+
+            Property name : string = "get_roles_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+
+        Property name : string = "/interactions";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __masternode : ROSNodeCompT = new ROSNodeCompT extended with {
+        Port pport0 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/info";
+
+            Property msg_type : string = "rocon_std_msgs/MasterInfo";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport1 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/rosout";
+
+            Property msg_type : string = "rosgraph_msgs/Log";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port serport0 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/GetLoggers";
+
+            Property args : string = "	";
+
+            Property name : string = "get_loggers";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport1 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/SetLoggerLevel";
+
+            Property args : string = "logger	level	";
+
+            Property name : string = "set_logger_level";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+
+        Property name : string = "/master";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __diagnostic_aggregatornode : ROSNodeCompT = new ROSNodeCompT extended with {
+        Port sport0 : TopicSubscribePortT = new TopicSubscribePortT extended with {
+
+            Property topic : string = "/diagnostics";
+
+            Property msg_type : string = "diagnostic_msgs/DiagnosticArray";
+            rule attachedOnlyToReceiverRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, ReceiverRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToSubscriberRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, SubscriberRoleT);
+
+        }
+        Port pport0 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/rosout";
+
+            Property msg_type : string = "rosgraph_msgs/Log";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport1 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/diagnostics_toplevel_state";
+
+            Property msg_type : string = "diagnostic_msgs/DiagnosticStatus";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport2 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/diagnostics_agg";
+
+            Property msg_type : string = "diagnostic_msgs/DiagnosticArray";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port serport0 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/SetLoggerLevel";
+
+            Property args : string = "logger	level	";
+
+            Property name : string = "set_logger_level";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport1 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/GetLoggers";
+
+            Property args : string = "	";
+
+            Property name : string = "get_loggers";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+
+        Property name : string = "/diagnostic_aggregator";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __move_basenode : ROSNodeCompT = new ROSNodeCompT extended with {
+        Port sport0 : TopicSubscribePortT = new TopicSubscribePortT extended with {
+
+            Property topic : string = "/tf";
+
+            Property msg_type : string = "tf2_msgs/TFMessage";
+            rule attachedOnlyToReceiverRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, ReceiverRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToSubscriberRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, SubscriberRoleT);
+
+        }
+        Port pport0 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/move_base/current_goal";
+
+            Property msg_type : string = "geometry_msgs/PoseStamped";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport1 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/navigation_velocity_smoother/raw_cmd_vel";
+
+            Property msg_type : string = "geometry_msgs/Twist";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport2 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/rosout";
+
+            Property msg_type : string = "rosgraph_msgs/Log";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport3 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/move_base/goal";
+
+            Property msg_type : string = "move_base_msgs/MoveBaseActionGoal";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port serport0 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/SetLoggerLevel";
+
+            Property args : string = "logger	level	";
+
+            Property name : string = "set_logger_level";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport1 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/GetLoggers";
+
+            Property args : string = "	";
+
+            Property name : string = "get_loggers";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+
+        Property name : string = "/move_base";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __handler_70958_1470705243600node : ROSNodeCompT = new ROSNodeCompT extended with {
+        Port pport0 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/rosout";
+
+            Property msg_type : string = "rosgraph_msgs/Log";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port serport0 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/SetLoggerLevel";
+
+            Property args : string = "logger	level	";
+
+            Property name : string = "set_logger_level";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport1 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/GetLoggers";
+
+            Property args : string = "	";
+
+            Property name : string = "get_loggers";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+
+        Property name : string = "/handler_70958_1470705243600";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __capability_servernode : ROSNodeCompT = new ROSNodeCompT extended with {
+        Port sport0 : TopicSubscribePortT = new TopicSubscribePortT extended with {
+
+            Property topic : string = "/capability_server/events";
+
+            Property msg_type : string = "capabilities/CapabilityEvent";
+            rule attachedOnlyToReceiverRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, ReceiverRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToSubscriberRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, SubscriberRoleT);
+
+        }
+        Port pport0 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/rosout";
+
+            Property msg_type : string = "rosgraph_msgs/Log";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport1 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/capability_server/events";
+
+            Property msg_type : string = "capabilities/CapabilityEvent";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port serport0 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "capabilities/GetCapabilitySpec";
+
+            Property args : string = "capability_spec	";
+
+            Property name : string = "get_capability_spec_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport1 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "std_srvs/Empty";
+
+            Property args : string = "	";
+
+            Property name : string = "reload_capabilities_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport2 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/SetLoggerLevel";
+
+            Property args : string = "logger	level	";
+
+            Property name : string = "set_logger_level";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport3 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "capabilities/GetInterfaces";
+
+            Property args : string = "	";
+
+            Property name : string = "get_interfaces_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport4 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "capabilities/GetProviders";
+
+            Property args : string = "interface	include_semantic	";
+
+            Property name : string = "get_providers_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport5 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "capabilities/GetSemanticInterfaces";
+
+            Property args : string = "interface	";
+
+            Property name : string = "get_semantic_interfaces_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport6 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "capabilities/GetCapabilitySpecs";
+
+            Property args : string = "	";
+
+            Property name : string = "get_capability_specs_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport7 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "capabilities/GetNodeletManagerName";
+
+            Property args : string = "	";
+
+            Property name : string = "get_nodelet_manager_name_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport8 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "capabilities/StartCapability";
+
+            Property args : string = "capability	preferred_provider	";
+
+            Property name : string = "start_capability_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport9 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "capabilities/UseCapability";
+
+            Property args : string = "capability	preferred_provider	bond_id	";
+
+            Property name : string = "use_capability_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport10 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "capabilities/StopCapability";
+
+            Property args : string = "capability	";
+
+            Property name : string = "stop_capability_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport11 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "capabilities/EstablishBond";
+
+            Property args : string = "	";
+
+            Property name : string = "establish_bond_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport12 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "capabilities/FreeCapability";
+
+            Property args : string = "capability	bond_id	";
+
+            Property name : string = "free_capability_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport13 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "capabilities/GetRunningCapabilities";
+
+            Property args : string = "	";
+
+            Property name : string = "get_running_capabilities_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport14 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "capabilities/GetRemappings";
+
+            Property args : string = "spec	";
+
+            Property name : string = "get_remappings_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport15 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/GetLoggers";
+
+            Property args : string = "	";
+
+            Property name : string = "get_loggers";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+
+        Property name : string = "/capability_server";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __app_managernode : ROSNodeCompT = new ROSNodeCompT extended with {
+        Port pport0 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/gateway/force_update";
+
+            Property msg_type : string = "std_msgs/Empty";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport1 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/app_manager/incompatible_rapp_list";
+
+            Property msg_type : string = "rocon_app_manager_msgs/IncompatibleRappList";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport2 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/rosout";
+
+            Property msg_type : string = "rosgraph_msgs/Log";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport3 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/app_manager/status";
+
+            Property msg_type : string = "rocon_app_manager_msgs/Status";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port pport4 : TopicAdvertisePortT = new TopicAdvertisePortT extended with {
+
+            Property topic : string = "/app_manager/rapp_list";
+
+            Property msg_type : string = "rocon_app_manager_msgs/RappList";
+            rule attachedOnlyToAnnouncerRoleT = invariant forall a in self.ATTACHEDROLES | 
+                declaresType(a, AnnouncerRoleT);
+            rule exactly1Attachment = heuristic size(self.ATTACHEDROLES) == 1;
+            rule attachedToPublisherRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, PublisherRoleT);
+
+        }
+        Port serport0 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "rocon_std_msgs/GetPlatformInfo";
+
+            Property args : string = "	";
+
+            Property name : string = "platform_info_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport1 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "rocon_app_manager_msgs/Invite";
+
+            Property args : string = "remote_target_name	application_namespace	cancel	";
+
+            Property name : string = "invite_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport2 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "rocon_app_manager_msgs/StartRapp";
+
+            Property args : string = "name	remappings	parameters	";
+
+            Property name : string = "start_rapp_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport3 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/GetLoggers";
+
+            Property args : string = "	";
+
+            Property name : string = "get_loggers";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport4 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/SetLoggerLevel";
+
+            Property args : string = "logger	level	";
+
+            Property name : string = "set_logger_level";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport5 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "rocon_app_manager_msgs/GetRappList";
+
+            Property args : string = "	";
+
+            Property name : string = "list_rapps_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport6 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "rocon_app_manager_msgs/StopRapp";
+
+            Property args : string = "	";
+
+            Property name : string = "stop_rapp_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+
+        Property name : string = "/app_manager";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __mobile_base_nodelet_managernode : ROSNodeManagerCompT = new ROSNodeManagerCompT extended with {
+        Port serport0 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/GetLoggers";
+
+            Property args : string = "	";
+
+            Property name : string = "get_loggers";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport1 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "nodelet/NodeletUnload";
+
+            Property args : string = "name	";
+
+            Property name : string = "unload_nodelet";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport2 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "nodelet/NodeletList";
+
+            Property args : string = "	";
+
+            Property name : string = "list";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport3 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "nodelet/NodeletLoad";
+
+            Property args : string = "name	type	remap_source_args	remap_target_args	my_argv	bond_id	";
+
+            Property name : string = "load_nodelet";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport4 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/SetLoggerLevel";
+
+            Property args : string = "logger	level	";
+
+            Property name : string = "set_logger_level";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+
+        Property name : string = "/mobile_base_nodelet_manager";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __bumper2pointcloudnode : ROSNodeletCompT = new ROSNodeletCompT extended with {
+        Port serport0 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/SetLoggerLevel";
+
+            Property args : string = "logger	level	";
+
+            Property name : string = "set_logger_level";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport1 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/GetLoggers";
+
+            Property args : string = "	";
+
+            Property name : string = "get_loggers";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+
+        Property name : string = "/bumper2pointcloud";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __cmd_vel_muxnode : ROSNodeletCompT = new ROSNodeletCompT extended with {
+        Port serport0 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/SetLoggerLevel";
+
+            Property args : string = "logger	level	";
+
+            Property name : string = "set_logger_level";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport1 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "dynamic_reconfigure/Reconfigure";
+
+            Property args : string = "config	";
+
+            Property name : string = "set_parameters";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport2 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/GetLoggers";
+
+            Property args : string = "	";
+
+            Property name : string = "get_loggers";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+
+        Property name : string = "/cmd_vel_mux";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __kobuki_safety_controllernode : ROSNodeletCompT = new ROSNodeletCompT extended with {
+        Port serport0 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/GetLoggers";
+
+            Property args : string = "	";
+
+            Property name : string = "get_loggers";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport1 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/SetLoggerLevel";
+
+            Property args : string = "logger	level	";
+
+            Property name : string = "set_logger_level";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+
+        Property name : string = "/kobuki_safety_controller";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __mobile_basenode : ROSNodeletCompT = new ROSNodeletCompT extended with {
+        Port serport0 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/GetLoggers";
+
+            Property args : string = "	";
+
+            Property name : string = "get_loggers";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport1 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/SetLoggerLevel";
+
+            Property args : string = "logger	level	";
+
+            Property name : string = "set_logger_level";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+
+        Property name : string = "/mobile_base";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __navigation_velocity_smoothernode : ROSNodeletCompT = new ROSNodeletCompT extended with {
+        Port serport0 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "dynamic_reconfigure/Reconfigure";
+
+            Property args : string = "config	";
+
+            Property name : string = "set_parameters";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport1 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/SetLoggerLevel";
+
+            Property args : string = "logger	level	";
+
+            Property name : string = "set_logger_level";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport2 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/GetLoggers";
+
+            Property args : string = "	";
+
+            Property name : string = "get_loggers";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+
+        Property name : string = "/navigation_velocity_smoother";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __capability_server_nodelet_managernode : ROSNodeManagerCompT = new ROSNodeManagerCompT extended with {
+        Port serport0 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/SetLoggerLevel";
+
+            Property args : string = "logger	level	";
+
+            Property name : string = "set_logger_level";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport1 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "nodelet/NodeletUnload";
+
+            Property args : string = "name	";
+
+            Property name : string = "unload_nodelet";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport2 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "roscpp/GetLoggers";
+
+            Property args : string = "	";
+
+            Property name : string = "get_loggers";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport3 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "nodelet/NodeletList";
+
+            Property args : string = "	";
+
+            Property name : string = "list";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+        Port serport4 : ServiceProviderPortT = new ServiceProviderPortT extended with {
+
+            Property svc_type : string = "nodelet/NodeletLoad";
+
+            Property args : string = "name	type	remap_source_args	remap_target_args	my_argv	bond_id	";
+
+            Property name : string = "load_nodelet";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToReponderRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, ResponderRoleT);
+
+        }
+
+        Property name : string = "/capability_server_nodelet_manager";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __rosservice_72777_1470705250601node : ROSNodeCompT = new ROSNodeCompT extended with {
+
+        Property name : string = "/rosservice_72777_1470705250601";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __rosservice_74185_1470705257538node : ROSNodeCompT = new ROSNodeCompT extended with {
+        Port callport0 : ServiceClientPortT = new ServiceClientPortT extended with {
+
+            Property persistency = non-persistent;
+
+            Property name : string = "/app_manager/list_rapps_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToCallerRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, CallerRoleT);
+
+        }
+
+        Property name : string = "/rosservice_74185_1470705257538";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __rosservice_77401_1470705273361node : ROSNodeCompT = new ROSNodeCompT extended with {
+        Port callport0 : ServiceClientPortT = new ServiceClientPortT extended with {
+
+            Property persistency = non-persistent;
+
+            Property name : string = "/app_manager/platform_info_prime";
+            rule atLeast1Attachment = heuristic size(self.ATTACHEDROLES) >= 1;
+            rule attachedOnlyToCallerRoleT = invariant forall r in self.ATTACHEDROLES | 
+                declaresType(r, CallerRoleT);
+
+        }
+
+        Property name : string = "/rosservice_77401_1470705273361";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Connector __zeroconf__new_connectionstopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+
+        Property topic : string = "/zeroconf/new_connections";
+
+        Property msg_type : string = "zeroconf_msgs/DiscoveredService";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __mobile_base__events__power_systemtopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/mobile_base/events/power_system";
+
+        Property msg_type : string = "kobuki_msgs/PowerSystemEvent";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __infotopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+
+        Property topic : string = "/info";
+
+        Property msg_type : string = "rocon_std_msgs/MasterInfo";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __rosout_aggtopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+
+        Property topic : string = "/rosout_agg";
+
+        Property msg_type : string = "rosgraph_msgs/Log";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __mobile_base__version_infotopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/mobile_base/version_info";
+
+        Property msg_type : string = "kobuki_msgs/VersionInfo";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __mobile_base__events__clifftopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/mobile_base/events/cliff";
+
+        Property msg_type : string = "kobuki_msgs/CliffEvent";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __navigation_velocity_smoother__raw_cmd_veltopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+
+        Property topic : string = "/navigation_velocity_smoother/raw_cmd_vel";
+
+        Property msg_type : string = "geometry_msgs/Twist";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __mobile_base__debug__raw_data_commandtopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/mobile_base/debug/raw_data_command";
+
+        Property msg_type : string = "std_msgs/String";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __gateway__force_updatetopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+
+        Property topic : string = "/gateway/force_update";
+
+        Property msg_type : string = "std_msgs/Empty";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __interactions__pairingtopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+
+        Property topic : string = "/interactions/pairing";
+
+        Property msg_type : string = "rocon_interaction_msgs/Pair";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __navigation_velocity_smoother__parameter_updatestopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/navigation_velocity_smoother/parameter_updates";
+
+        Property msg_type : string = "dynamic_reconfigure/Config";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __mobile_base__sensors__imu_data_rawtopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/mobile_base/sensors/imu_data_raw";
+
+        Property msg_type : string = "sensor_msgs/Imu";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __maptopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+
+        Property topic : string = "/map";
+
+        Property msg_type : string = "nav_msgs/OccupancyGrid";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __mobile_base__events__robot_statetopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/mobile_base/events/robot_state";
+
+        Property msg_type : string = "kobuki_msgs/RobotStateEvent";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __diagnosticstopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicSubscriberRoleT0 : ROSTopicSubscriberRoleT = new ROSTopicSubscriberRoleT extended with {
+            rule attachedOnlyToReceivePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, ReceivePortT);
+            rule attachedToSubscribePortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, SubscribePortT);
+
+        }
+
+        Property topic : string = "/diagnostics";
+
+        Property msg_type : string = "diagnostic_msgs/DiagnosticArray";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __amcl_posetopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+
+        Property topic : string = "/amcl_pose";
+
+        Property msg_type : string = "geometry_msgs/PoseWithCovarianceStamped";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __move_base__current_goaltopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+
+        Property topic : string = "/move_base/current_goal";
+
+        Property msg_type : string = "geometry_msgs/PoseStamped";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __mobile_base__debug__raw_data_streamtopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/mobile_base/debug/raw_data_stream";
+
+        Property msg_type : string = "std_msgs/String";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __mobile_base__sensors__dock_irtopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/mobile_base/sensors/dock_ir";
+
+        Property msg_type : string = "kobuki_msgs/DockInfraRed";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __interactions__interactive_clientstopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+
+        Property topic : string = "/interactions/interactive_clients";
+
+        Property msg_type : string = "rocon_interaction_msgs/InteractiveClients";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __mobile_base__commands__velocitytopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/mobile_base/commands/velocity";
+
+        Property msg_type : string = "geometry_msgs/Twist";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __app_manager__incompatible_rapp_listtopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+
+        Property topic : string = "/app_manager/incompatible_rapp_list";
+
+        Property msg_type : string = "rocon_app_manager_msgs/IncompatibleRappList";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __mobile_base__events__buttontopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/mobile_base/events/button";
+
+        Property msg_type : string = "kobuki_msgs/ButtonEvent";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __diagnostics_aggtopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicAdvertiserRoleT6 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+
+        Property topic : string = "/diagnostics_agg";
+
+        Property msg_type : string = "diagnostic_msgs/DiagnosticArray";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __mobile_base__sensors__coretopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/mobile_base/sensors/core";
+
+        Property msg_type : string = "kobuki_msgs/SensorState";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __mobile_base_nodelet_manager__bondtopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/mobile_base_nodelet_manager/bond";
+
+        Property msg_type : string = "bond/Status";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __amcl__parameter_descriptionstopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+
+        Property topic : string = "/amcl/parameter_descriptions";
+
+        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __rosouttopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+        Role ROSTopicAdvertiserRoleT1 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+        Role ROSTopicSubscriberRoleT0 : ROSTopicSubscriberRoleT = new ROSTopicSubscriberRoleT extended with {
+            rule attachedOnlyToReceivePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, ReceivePortT);
+            rule attachedToSubscribePortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, SubscribePortT);
+
+        }
+        Role ROSTopicAdvertiserRoleT2 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+        Role ROSTopicAdvertiserRoleT3 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+        Role ROSTopicAdvertiserRoleT4 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+        Role ROSTopicAdvertiserRoleT5 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+        Role ROSTopicAdvertiserRoleT6 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+        Role ROSTopicAdvertiserRoleT7 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+        Role ROSTopicAdvertiserRoleT8 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+        Role ROSTopicAdvertiserRoleT9 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+        Role ROSTopicAdvertiserRoleT10 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+
+        Property topic : string = "/rosout";
+
+        Property msg_type : string = "rosgraph_msgs/Log";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __diagnostics_toplevel_statetopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicAdvertiserRoleT6 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+
+        Property topic : string = "/diagnostics_toplevel_state";
+
+        Property msg_type : string = "diagnostic_msgs/DiagnosticStatus";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __mobile_base__debug__raw_control_commandtopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/mobile_base/debug/raw_control_command";
+
+        Property msg_type : string = "std_msgs/Int16MultiArray";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __joint_statestopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicSubscriberRoleT0 : ROSTopicSubscriberRoleT = new ROSTopicSubscriberRoleT extended with {
+            rule attachedOnlyToReceivePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, ReceivePortT);
+            rule attachedToSubscribePortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, SubscribePortT);
+
+        }
+
+        Property topic : string = "/joint_states";
+
+        Property msg_type : string = "sensor_msgs/JointState";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __cmd_vel_mux__input__safety_controllertopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/cmd_vel_mux/input/safety_controller";
+
+        Property msg_type : string = "geometry_msgs/Twist";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __mobile_base__sensors__imu_datatopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/mobile_base/sensors/imu_data";
+
+        Property msg_type : string = "sensor_msgs/Imu";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __zeroconf__lost_connectionstopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicAdvertiserRoleT2 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+
+        Property topic : string = "/zeroconf/lost_connections";
+
+        Property msg_type : string = "zeroconf_msgs/DiscoveredService";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __capability_server__eventstopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicSubscriberRoleT0 : ROSTopicSubscriberRoleT = new ROSTopicSubscriberRoleT extended with {
+            rule attachedOnlyToReceivePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, ReceivePortT);
+            rule attachedToSubscribePortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, SubscribePortT);
+
+        }
+        Role ROSTopicAdvertiserRoleT9 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+
+        Property topic : string = "/capability_server/events";
+
+        Property msg_type : string = "capabilities/CapabilityEvent";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __particlecloudtopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+
+        Property topic : string = "/particlecloud";
+
+        Property msg_type : string = "geometry_msgs/PoseArray";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __odomtopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/odom";
+
+        Property msg_type : string = "nav_msgs/Odometry";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __amcl__parameter_updatestopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+
+        Property topic : string = "/amcl/parameter_updates";
+
+        Property msg_type : string = "dynamic_reconfigure/Config";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __cmd_vel_mux__parameter_descriptionstopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/cmd_vel_mux/parameter_descriptions";
+
+        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __app_manager__rapp_listtopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicAdvertiserRoleT10 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+
+        Property topic : string = "/app_manager/rapp_list";
+
+        Property msg_type : string = "rocon_app_manager_msgs/RappList";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __mobile_base__events__digital_inputtopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/mobile_base/events/digital_input";
+
+        Property msg_type : string = "kobuki_msgs/DigitalInputEvent";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __mobile_base__controller_infotopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/mobile_base/controller_info";
+
+        Property msg_type : string = "kobuki_msgs/ControllerInfo";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __cmd_vel_mux__parameter_updatestopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/cmd_vel_mux/parameter_updates";
+
+        Property msg_type : string = "dynamic_reconfigure/Config";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __mobile_base__events__bumpertopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/mobile_base/events/bumper";
+
+        Property msg_type : string = "kobuki_msgs/BumperEvent";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __mobile_base__sensors__bumper_pointcloudtopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/mobile_base/sensors/bumper_pointcloud";
+
+        Property msg_type : string = "sensor_msgs/PointCloud2";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __cmd_vel_mux__input__navitopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/cmd_vel_mux/input/navi";
+
+        Property msg_type : string = "geometry_msgs/Twist";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __navigation_velocity_smoother__parameter_descriptionstopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/navigation_velocity_smoother/parameter_descriptions";
+
+        Property msg_type : string = "dynamic_reconfigure/ConfigDescription";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __cmd_vel_mux__activetopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/cmd_vel_mux/active";
+
+        Property msg_type : string = "std_msgs/String";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __move_base__goaltopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicAdvertiserRoleT7 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+
+        Property topic : string = "/move_base/goal";
+
+        Property msg_type : string = "move_base_msgs/MoveBaseActionGoal";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __mobile_base__events__wheel_droptopic : TopicConnectorT = new TopicConnectorT extended with {
+
+        Property topic : string = "/mobile_base/events/wheel_drop";
+
+        Property msg_type : string = "kobuki_msgs/WheelDropEvent";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __app_manager__statustopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicSubscriberRoleT0 : ROSTopicSubscriberRoleT = new ROSTopicSubscriberRoleT extended with {
+            rule attachedOnlyToReceivePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, ReceivePortT);
+            rule attachedToSubscribePortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, SubscribePortT);
+
+        }
+        Role ROSTopicAdvertiserRoleT10 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+
+        Property topic : string = "/app_manager/status";
+
+        Property msg_type : string = "rocon_app_manager_msgs/Status";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __map_metadatatopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+
+        Property topic : string = "/map_metadata";
+
+        Property msg_type : string = "nav_msgs/MapMetaData";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __tftopic : TopicConnectorT = new TopicConnectorT extended with {
+        Role ROSTopicSubscriberRoleT0 : ROSTopicSubscriberRoleT = new ROSTopicSubscriberRoleT extended with {
+            rule attachedOnlyToReceivePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, ReceivePortT);
+            rule attachedToSubscribePortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, SubscribePortT);
+
+        }
+        Role ROSTopicAdvertiserRoleT0 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+        Role ROSTopicAdvertiserRoleT1 : ROSTopicAdvertiserRoleT = new ROSTopicAdvertiserRoleT extended with {
+            rule attachedOnlyToAnnouncePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, AnnouncePortT);
+            rule attachedToPublisherPortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, PublishPortT);
+
+        }
+        Role ROSTopicSubscriberRoleT1 : ROSTopicSubscriberRoleT = new ROSTopicSubscriberRoleT extended with {
+            rule attachedOnlyToReceivePortT = invariant forall a in self.ATTACHEDPORTS | 
+                declaresType(a, ReceivePortT);
+            rule attachedToSubscribePortT = invariant forall p in self.ATTACHEDPORTS | 
+                declaresType(p, SubscribePortT);
+
+        }
+
+        Property topic : string = "/tf";
+
+        Property msg_type : string = "tf2_msgs/TFMessage";
+        rule topicsMatchAdvertiser = invariant forall r :! ROSTopicAdvertiserRoleT in self.ROLES | 
+            forall p :! TopicAdvertisePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule topicsMatchSubscriber = invariant forall r :! ROSTopicSubscriberRoleT in self.ROLES | 
+            forall p :! TopicSubscribePortT in r.ATTACHEDPORTS | 
+                (p.topic == topic AND p.msg_type == msg_type);
+        rule hasOneAnnoucerRole = invariant exists r in self.ROLES | 
+            declaresType(r, AnnouncerRoleT);
+        rule hasOneReceiverRole = invariant exists r in self.ROLES | 
+            declaresType(r, ReceiverRoleT);
+        rule atLeast1RoleOfTypePublisherRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, PublisherRoleT);
+        rule atLeast1RoleOfTypeSubscriberRoleT = heuristic exists r in self.ROLES | 
+            declaresType(r, SubscriberRoleT);
+
+    }
+    Connector __app_manager__list_rapps_prime : ServiceConnT = new ServiceConnT extended with {
+        Role ROSServiceResponderRoleT0 : ROSServiceResponderRoleT = new ROSServiceResponderRoleT extended with {
+            rule exactly1Attachment = heuristic size(self.ATTACHEDPORTS) == 1;
+            rule attachedOnlyToResponsePort = invariant forall p : Port in self.ATTACHEDPORTS | 
+                declaresType(p, ResponsePortT);
+
+        }
+        Role ROSServiceResponderRoleT1 : ROSServiceResponderRoleT = new ROSServiceResponderRoleT extended with {
+            rule exactly1Attachment = heuristic size(self.ATTACHEDPORTS) == 1;
+            rule attachedOnlyToResponsePort = invariant forall p : Port in self.ATTACHEDPORTS | 
+                declaresType(p, ResponsePortT);
+
+        }
+        Role ROSServiceCallerRoleT0 : ROSServiceCallerRoleT = new ROSServiceCallerRoleT extended with {
+            rule exactly1Attachment = heuristic size(self.ATTACHEDPORTS) == 1;
+            rule attachedOnlyToRequestPort = invariant forall p : Port in self.ATTACHEDPORTS | 
+                declaresType(p, RequestPortT);
+
+        }
+        rule exactly2Roles = invariant size(self.ROLES) == 2;
+        rule exactly1RoleOfTypeCallerRoleT = invariant exists r in self.ROLES | 
+            declaresType(r, CallerRoleT);
+        rule exactly1RoleOfTypeResponderRoleT = invariant exists r in self.ROLES | 
+            declaresType(r, ResponderRoleT);
+
+    }
+    Connector __app_manager__platform_info_prime : ServiceConnT = new ServiceConnT extended with {
+        Role ROSServiceResponderRoleT0 : ROSServiceResponderRoleT = new ROSServiceResponderRoleT extended with {
+            rule exactly1Attachment = heuristic size(self.ATTACHEDPORTS) == 1;
+            rule attachedOnlyToResponsePort = invariant forall p : Port in self.ATTACHEDPORTS | 
+                declaresType(p, ResponsePortT);
+
+        }
+        Role ROSServiceResponderRoleT1 : ROSServiceResponderRoleT = new ROSServiceResponderRoleT extended with {
+            rule exactly1Attachment = heuristic size(self.ATTACHEDPORTS) == 1;
+            rule attachedOnlyToResponsePort = invariant forall p : Port in self.ATTACHEDPORTS | 
+                declaresType(p, ResponsePortT);
+
+        }
+        Role ROSServiceCallerRoleT0 : ROSServiceCallerRoleT = new ROSServiceCallerRoleT extended with {
+            rule exactly1Attachment = heuristic size(self.ATTACHEDPORTS) == 1;
+            rule attachedOnlyToRequestPort = invariant forall p : Port in self.ATTACHEDPORTS | 
+                declaresType(p, RequestPortT);
+
+        }
+        rule exactly2Roles = invariant size(self.ROLES) == 2;
+        rule exactly1RoleOfTypeCallerRoleT = invariant exists r in self.ROLES | 
+            declaresType(r, CallerRoleT);
+        rule exactly1RoleOfTypeResponderRoleT = invariant exists r in self.ROLES | 
+            declaresType(r, ResponderRoleT);
+
+    }
+    Attachment __amclnode.sport0 to __tftopic.ROSTopicSubscriberRoleT0;
+    Attachment __amclnode.pport0 to __amcl_posetopic.ROSTopicAdvertiserRoleT0;
+    Attachment __amclnode.pport1 to __tftopic.ROSTopicAdvertiserRoleT0;
+    Attachment __amclnode.pport2 to __amcl__parameter_updatestopic.ROSTopicAdvertiserRoleT0;
+    Attachment __amclnode.pport3 to __particlecloudtopic.ROSTopicAdvertiserRoleT0;
+    Attachment __amclnode.pport4 to __rosouttopic.ROSTopicAdvertiserRoleT0;
+    Attachment __amclnode.pport5 to __amcl__parameter_descriptionstopic.ROSTopicAdvertiserRoleT0;
+    Attachment __robot_state_publishernode.sport0 to __joint_statestopic.ROSTopicSubscriberRoleT0;
+    Attachment __robot_state_publishernode.pport0 to __tftopic.ROSTopicAdvertiserRoleT1;
+    Attachment __robot_state_publishernode.pport1 to __rosouttopic.ROSTopicAdvertiserRoleT1;
+    Attachment __rosoutnode.sport0 to __rosouttopic.ROSTopicSubscriberRoleT0;
+    Attachment __rosoutnode.pport0 to __rosout_aggtopic.ROSTopicAdvertiserRoleT0;
+    Attachment __zeroconf__zeroconfnode.pport0 to __zeroconf__new_connectionstopic.ROSTopicAdvertiserRoleT0;
+    Attachment __zeroconf__zeroconfnode.pport1 to __rosouttopic.ROSTopicAdvertiserRoleT2;
+    Attachment __zeroconf__zeroconfnode.pport2 to __zeroconf__lost_connectionstopic.ROSTopicAdvertiserRoleT2;
+    Attachment __map_servernode.pport0 to __map_metadatatopic.ROSTopicAdvertiserRoleT0;
+    Attachment __map_servernode.pport1 to __maptopic.ROSTopicAdvertiserRoleT0;
+    Attachment __map_servernode.pport2 to __rosouttopic.ROSTopicAdvertiserRoleT3;
+    Attachment __interactionsnode.sport0 to __app_manager__statustopic.ROSTopicSubscriberRoleT0;
+    Attachment __interactionsnode.pport0 to __interactions__pairingtopic.ROSTopicAdvertiserRoleT0;
+    Attachment __interactionsnode.pport1 to __interactions__interactive_clientstopic.ROSTopicAdvertiserRoleT0;
+    Attachment __interactionsnode.pport2 to __rosouttopic.ROSTopicAdvertiserRoleT4;
+    Attachment __masternode.pport0 to __infotopic.ROSTopicAdvertiserRoleT0;
+    Attachment __masternode.pport1 to __rosouttopic.ROSTopicAdvertiserRoleT5;
+    Attachment __diagnostic_aggregatornode.sport0 to __diagnosticstopic.ROSTopicSubscriberRoleT0;
+    Attachment __diagnostic_aggregatornode.pport0 to __rosouttopic.ROSTopicAdvertiserRoleT6;
+    Attachment __diagnostic_aggregatornode.pport1 to __diagnostics_toplevel_statetopic.ROSTopicAdvertiserRoleT6;
+    Attachment __diagnostic_aggregatornode.pport2 to __diagnostics_aggtopic.ROSTopicAdvertiserRoleT6;
+    Attachment __move_basenode.sport0 to __tftopic.ROSTopicSubscriberRoleT1;
+    Attachment __move_basenode.pport0 to __move_base__current_goaltopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport1 to __navigation_velocity_smoother__raw_cmd_veltopic.ROSTopicAdvertiserRoleT0;
+    Attachment __move_basenode.pport2 to __rosouttopic.ROSTopicAdvertiserRoleT7;
+    Attachment __move_basenode.pport3 to __move_base__goaltopic.ROSTopicAdvertiserRoleT7;
+    Attachment __handler_70958_1470705243600node.pport0 to __rosouttopic.ROSTopicAdvertiserRoleT8;
+    Attachment __capability_servernode.sport0 to __capability_server__eventstopic.ROSTopicSubscriberRoleT0;
+    Attachment __capability_servernode.pport0 to __rosouttopic.ROSTopicAdvertiserRoleT9;
+    Attachment __capability_servernode.pport1 to __capability_server__eventstopic.ROSTopicAdvertiserRoleT9;
+    Attachment __app_managernode.pport0 to __gateway__force_updatetopic.ROSTopicAdvertiserRoleT0;
+    Attachment __app_managernode.pport1 to __app_manager__incompatible_rapp_listtopic.ROSTopicAdvertiserRoleT0;
+    Attachment __app_managernode.pport2 to __rosouttopic.ROSTopicAdvertiserRoleT10;
+    Attachment __app_managernode.pport3 to __app_manager__statustopic.ROSTopicAdvertiserRoleT10;
+    Attachment __app_managernode.pport4 to __app_manager__rapp_listtopic.ROSTopicAdvertiserRoleT10;
+    Attachment __app_managernode.serport5 to __app_manager__list_rapps_prime.ROSServiceResponderRoleT0;
+    Attachment __app_managernode.serport5 to __app_manager__list_rapps_prime.ROSServiceResponderRoleT1;
+    Attachment __rosservice_74185_1470705257538node.callport0 to __app_manager__list_rapps_prime.ROSServiceCallerRoleT0;
+    Attachment __app_managernode.serport0 to __app_manager__platform_info_prime.ROSServiceResponderRoleT0;
+    Attachment __app_managernode.serport0 to __app_manager__platform_info_prime.ROSServiceResponderRoleT1;
+    Attachment __rosservice_77401_1470705273361node.callport0 to __app_manager__platform_info_prime.ROSServiceCallerRoleT0;
+    Group group1 : ROSNodeManagerGroupT = new ROSNodeManagerGroupT extended with {
+
+        Property name : string = "/mobile_base_nodelet_manager";
+        rule onlyNodelets = invariant forall m in self.MEMBERS | 
+            (declaresType(m, ROSNodeletCompT) OR declaresType(m, ROSNodeManagerCompT));
+        rule oneNodeManager = invariant exists unique m in self.MEMBERS | 
+            declaresType(m, ROSNodeManagerCompT);
+        Members {__mobile_base_nodelet_managernode, __bumper2pointcloudnode, __cmd_vel_muxnode, __kobuki_safety_controllernode, __mobile_basenode, __navigation_velocity_smoothernode}
+
+    }
+    Group group2 : ROSNodeManagerGroupT = new ROSNodeManagerGroupT extended with {
+
+        Property name : string = "/capability_server_nodelet_manager";
+        rule onlyNodelets = invariant forall m in self.MEMBERS | 
+            (declaresType(m, ROSNodeletCompT) OR declaresType(m, ROSNodeManagerCompT));
+        rule oneNodeManager = invariant exists unique m in self.MEMBERS | 
+            declaresType(m, ROSNodeManagerCompT);
+        Members {__capability_server_nodelet_managernode}
+
+    }
+    rule allNodeletsInGroup = invariant forall n :! ROSNodeletCompT in self.COMPONENTS | 
+        exists unique m :! ROSNodeManagerGroupT in self.GROUPS | 
+            contains(n, m.MEMBERS);
+    rule topicsMatch = invariant forall s :! TopicSubscribePortT in /self/COMPONENTS/PORTS:!TopicSubscribePortT | 
+        exists p :! TopicAdvertisePortT in /self/COMPONENTS/PORTS:!TopicAdvertisePortT | 
+            (s.topic == p.topic AND s.msg_type == p.msg_type);
+    rule onlyOneBusForTopicAndMsg = invariant forall t1,t2 :! TopicConnectorT in self.CONNECTORS | 
+        ((t1.msg_type == t2.msg_type AND t1.topic == t2.topic) <-> t1 == t2);
+    rule onlyOneBusForTopic = heuristic forall t1,t2 :! TopicConnectorT in self.CONNECTORS | 
+        (t1.topic == t2.topic) <-> t1 == t2;
+    rule noDuplicateNodes = invariant forall n2 :! ROSNodeCompT in self.COMPONENTS | 
+        forall n1 :! ROSNodeCompT in self.COMPONENTS | 
+            (n1.name == n2.name) <-> n1 == n2;
+}
+

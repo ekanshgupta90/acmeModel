@@ -9,10 +9,7 @@ import org.acmestudio.standalone.resource.StandaloneResourceProvider;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.*;
 
@@ -27,13 +24,14 @@ public class Model {
     private HashMap<Node, ArrayList<Node>> nodeletList = new HashMap<>();
     private ArrayList<Group> groupArrayList = new ArrayList<>();
     private ArrayList<Service> serviceArrayList = new ArrayList<>();
-    private ArrayList<ServiceConnector> serviceConnectors = new ArrayList<>();
+    private HashMap<String, ServiceConnector> serviceConnectors = new HashMap<>();
+    private HashMap<String, String> callsMap = new HashMap<>();
 
     public Model(String familyPath, String fileName, String systemName) {
         System.setProperty(StandaloneResourceProvider.FAMILY_SEARCH_PATH, familyPath);
         IAcmeResource resource = null;
         try {
-            resource = StandaloneResourceProvider.instance().acmeResourceForString("src/turtle.acme");
+            resource = StandaloneResourceProvider.instance().acmeResourceForString(fileName);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParsingFailureException e) {
@@ -43,6 +41,38 @@ public class Model {
         system = model.getSystem(systemName);
     }
 
+
+    public void createServiceCalls() throws Exception {
+
+        Component client = null;
+        Component server = null;
+        ServiceConnector serviceConnector = null;
+
+        if (! callsMap.isEmpty()) {
+            System.out.print(callsMap);
+            for (Component component : componentArrayList) {
+                if (("/" + component.getName().split("__")[1]).equals(callsMap.get("client") + "node")) {
+                    client = component;
+                }
+
+                if (("/" + component.getName().split("__")[1]).equals(callsMap.get("server") + "node")) {
+                    server = component;
+                }
+            }
+
+            if (serviceConnectors.get(callsMap.get("service_name")) == null) {
+                serviceConnector = new ServiceConnector(system, callsMap.get("service_name"));
+                serviceConnectors.put(callsMap.get("service_name"), serviceConnector);
+            } else {
+                serviceConnector = serviceConnectors.get(callsMap.get("service_name"));
+            }
+
+            server.connectToServiceConnector(system, callsMap.get("service_name"), serviceConnector);
+            client.createServiceCallerPort(system, callsMap.get("service_name"), serviceConnector);
+        }
+    }
+
+
     public void createComponents() throws Exception{
 
         for (Node node : nodeArrayList) {
@@ -50,7 +80,7 @@ public class Model {
             component.addStringTypeProperty("name",node.getOriginalName());
             component.createSubscribers(system,node.getSubscribed(),connectorArrayList);
             component.createPublishers(system,node.getPublished(),connectorArrayList);
-            component.createServiceResponderPorts(system, node.getServices(), serviceConnectors);
+            component.createServiceResponderPorts(system, node.getServices());
             componentArrayList.add(component);
         }
         int groupId = 0;
@@ -58,24 +88,25 @@ public class Model {
         for(Node key: nodeletList.keySet()) {
             groupId++;
             Group group = new Group(system, "group" + String.valueOf(groupId));
+            group.addStringTypeProperty("name", key.getOriginalName());
             List<String> nodeManager = new ArrayList<>();
             nodeManager.add("ROSNodeManagerCompT");
             Component component = new Component(system, key.getName(), nodeManager);
             component.addStringTypeProperty("name", key.getOriginalName());
             component.createSubscribers(system, key.getSubscribed(), connectorArrayList);
             component.createPublishers(system, key.getPublished(), connectorArrayList);
-            component.createServiceResponderPorts(system, key.getServices(), serviceConnectors);
+            component.createServiceResponderPorts(system, key.getServices());
             componentArrayList.add(component);
             group.addMember(system, component.getComponent());
 
             for (Node node : nodeletList.get(key)) {
                 List<String> nodeletType = new ArrayList<>();
-                nodeManager.add("ROSNodeletCompT");
+                nodeletType.add("ROSNodeletCompT");
                 Component nodelet = new Component(system, node.getName(), nodeletType);
                 nodelet.addStringTypeProperty("name", node.getOriginalName());
                 nodelet.createSubscribers(system, node.getSubscribed(), connectorArrayList);
                 nodelet.createPublishers(system, node.getPublished(), connectorArrayList);
-                nodelet.createServiceResponderPorts(system, node.getServices(), serviceConnectors);
+                nodelet.createServiceResponderPorts(system, node.getServices());
                 componentArrayList.add(nodelet);
                 group.addMember(system, nodelet.getComponent());
             }
@@ -93,18 +124,18 @@ public class Model {
             connector.addStringTypeProperty("msg_type", topic.getMsg_Type());
             connectorArrayList.add(connector);
         }
-
-        for (Service service: serviceArrayList) {
-            ServiceConnector serviceConnector = new ServiceConnector(system, service.getName());
-            serviceConnectors.add(serviceConnector);
-        }
     }
 
 
-    public void createModel() throws  Exception{
+    public void createModel() {
         System.out.println("Started");
-        createConnectors();
-        createComponents();
+        try {
+            createConnectors();
+            createComponents();
+            createServiceCalls();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         System.out.println("Finished");
     }
 
@@ -113,7 +144,7 @@ public class Model {
 
         OutputStream s = null;
         try {
-            s = new FileOutputStream("src/new.acme");
+            s = new FileOutputStream("turtle.acme");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -166,12 +197,10 @@ public class Model {
         for(String name: map.keySet()) {
             if(!name.equals("nodes")) {
                 Node node = new Node(name);
-                //nodeArrayList.add(node);
                 ArrayList<String> nodeletArray = map.get(name);
                 ArrayList<Node> nodlets = new ArrayList<>();
                 for (int i = 0; i < nodeletArray.size(); i++) {
                     Node node1 = new Node(nodeletArray.get(i));
-                    //nodeArrayList.add(node1);
                     nodlets.add(node1);
                 }
                 nodeletList.put(node,nodlets);
@@ -280,7 +309,7 @@ public class Model {
 
     public void addCalls(String t) {
         JSONArray jsonarray = new JSONArray(t);
-        HashMap<String, String> map = new HashMap<>();
+        callsMap = new HashMap<>();
         for(Object jsonObject : jsonarray) {
             JSONObject jObject = new JSONObject((String) jsonObject);
             Iterator<?> keys = jObject.keys();
@@ -288,13 +317,7 @@ public class Model {
             while (keys.hasNext()) {
                 String key = (String) keys.next();
                 String value = jObject.getString(key);
-                map.put(key, value);
-            }
-        }
-        for (Component component: componentArrayList) {
-
-            if (("/" + component.getName().split("__")[1]).equals(map.get("client") + "node")) {
-                component.createServiceCallerPort(system, map.get("service_name"), serviceConnectors);
+                callsMap.put(key, value);
             }
         }
     }
@@ -307,6 +330,7 @@ public class Model {
         nodeletList = new HashMap<>();
         groupArrayList = new ArrayList<>();
         serviceArrayList = new ArrayList<>();
+        callsMap = new HashMap<>();
 
         try {
             createTopicList(jObject.get("topics").toString());

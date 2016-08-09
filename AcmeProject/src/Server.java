@@ -23,6 +23,7 @@ public class Server {
 
     public void start() {
         server.start();
+        System.out.println("Server started");
     }
 
 

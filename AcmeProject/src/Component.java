@@ -9,12 +9,14 @@ import org.acmestudio.acme.model.util.core.UMIntValue;
 import org.acmestudio.acme.model.util.core.UMStringValue;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
 public class Component {
 
     private IAcmeComponent component;
+    private HashMap<String, String> servicePortmap = new HashMap<>();
 
 
     public Component(IAcmeSystem system, String name) {
@@ -26,6 +28,7 @@ public class Component {
             e.printStackTrace();
         }
         component = system.getComponent(name);
+        servicePortmap = new HashMap<>();
     }
 
 
@@ -182,41 +185,32 @@ public class Component {
         }
     }
 
-    public void createServiceResponderPorts(IAcmeSystem system, List<Service> services, ArrayList<ServiceConnector> serviceConnectors) {
+    public void createServiceResponderPorts(IAcmeSystem system, List<Service> services) {
         int portNumber = 0;
-        int roleNumber = 0;
         String portName = "serport";
-        String roleName = "ROSServiceResponderRoleT";
 
         try {
             for (Service service : services) {
                 addServiceProviderPort(portName + portNumber);
-                IAcmePort port = getPort(portName + portNumber);
+                //IAcmePort port = getPort(portName + portNumber);
                 String service_type = null;
                 String args = null;
                 String name = null;
-                for (ServiceConnector connector : serviceConnectors) {
-                    if (connector.getName().equals(service.getName())) {
-                        while (connector.getRole(roleName + roleNumber) != null)
-                            roleNumber++;
-
-                        connector.addResponderRole(roleName + roleNumber);
-                        IAcmeRole role = connector.getRole(roleName + roleNumber);
-                        Attachment attachment = new Attachment(system, port, role);
-                        service_type = service.getType();
-                        StringBuilder sb = new StringBuilder();
-                        for (String s : service.getArgs()) {
-                            sb.append(s);
-                            sb.append("\t");
-                        }
-                        args = sb.toString();
-                        name = service.getName().split("/")[2];
-                    }
+                service_type = service.getType();
+                StringBuilder sb = new StringBuilder();
+                for (String s : service.getArgs()) {
+                    sb.append(s);
+                    sb.append("\t");
                 }
+                args = sb.toString();
+                name = service.getName().split("/")[2];
 
                 addStringTypePropertytoPort(portName + portNumber, "svc_type", service_type);
                 addStringTypePropertytoPort(portName + portNumber, "args", args);
                 addStringTypePropertytoPort(portName + portNumber, "name", name);
+
+                if (service.getName() != null && (portName + portNumber) != null)
+                    servicePortmap.put(service.getName(), portName + portNumber);
                 portNumber++;
             }
         }
@@ -226,7 +220,21 @@ public class Component {
     }
 
 
-    public void createServiceCallerPort(IAcmeSystem system, String serviceName, ArrayList<ServiceConnector> serviceConnectors) {
+    public void connectToServiceConnector(IAcmeSystem system, String serviceName, ServiceConnector connector) {
+        int roleNumber = 0;
+        String roleName = "ROSServiceResponderRoleT";
+
+                while (connector.getRole(roleName + roleNumber) != null)
+                    roleNumber++;
+
+                connector.addResponderRole(roleName + roleNumber);
+                IAcmeRole role = connector.getRole(roleName + roleNumber);
+                IAcmePort port = getPort(servicePortmap.get(serviceName));
+                Attachment attachment = new Attachment(system, port, role);
+    }
+
+
+    public void createServiceCallerPort(IAcmeSystem system, String serviceName, ServiceConnector connector) {
         int portNumber = 0;
         int roleNumber = 0;
         String portName = "callport";
@@ -235,16 +243,12 @@ public class Component {
         try {
                 addServiceClientPort(portName + portNumber);
                 IAcmePort port = getPort(portName + portNumber);
-                for (ServiceConnector connector : serviceConnectors) {
-                    if (connector.getName().equals(serviceName)) {
                         while (connector.getRole(roleName + roleNumber) != null)
                             roleNumber++;
 
                         connector.addCallerRole(roleName + roleNumber);
                         IAcmeRole role = connector.getRole(roleName + roleNumber);
                         Attachment attachment = new Attachment(system, port, role);
-                    }
-                }
                 addStringTypePropertytoPort(portName + portNumber, "name", serviceName);
                 portNumber++;
         }
@@ -252,9 +256,6 @@ public class Component {
             e.printStackTrace();
         }
     }
-
-
-
 
     public IAcmeComponent getComponent(){
         return component;
