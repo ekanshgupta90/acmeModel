@@ -28,7 +28,7 @@ serviceExpeptions = []
 noServiceIntermediator = []
 oldnoServiceIntermediator = []
 
-URL = "http://127.0.0.1:8000/data"
+URL = "http://192.168.113.1:8000/data"
 
 
 def accumulate_action_topics(self, nodes_in, edges_in, node_connections):
@@ -213,6 +213,29 @@ def parse_info_pub(info):
             reached_pub = True
     return publishers
 
+def parse_info_node(info):
+    start = False
+    topics = []
+
+    for line in info.splitlines():
+        if not start:
+            if line == "Subscriptions: ":
+                start = True
+
+            continue
+        else:
+            if line[1:2] != "*":
+                break
+            else:
+                brack_start = line.find("[")
+                brack_end = line.find("]")
+                topic_name = line[3:(brack_start - 1)]
+                topic_type = line[(brack_start + 1) : brack_end]
+                topics.append([topic_name,topic_type])
+                
+    return topics
+
+
 
 def sendPub(new_publish):
     p = {}
@@ -304,6 +327,15 @@ def arch():
             new_publish = {}
             new_publish1 = {}
 
+            # Adding topics that are only subcribed, but not published
+            for node_name in new_nodes:
+                node_info = rosnode.get_node_info_description(node_name)
+                temp_topics = parse_info_node(node_info)
+                temp_topics = [item for item in temp_topics if item not in new_topics]
+                for item in temp_topics:
+                    new_topics.append(item)
+
+
             inc_topics = [item for item in new_topics if item not in last_topics]
             inc_nodes = [item for item in new_nodes if item not in last_nodes]
             inc_service_dict = {}
@@ -360,11 +392,10 @@ def arch():
 
                 y["topics"] = send_topics(inc_topics)
                 y["nodes"] = send_nodes(inc_nodes)
-                y["pub"] = sendPub(inc_publish)
-                y["sub"] = sendSub(inc_publish1)
+                y["pub"] = sendPub(inc_publish1)
+                y["sub"] = sendSub(inc_publish)
                 y["service"] = inc_service_dict
                 y["calls"] = inc_reported
-
 
                 last_nodes = list(new_nodes)
                 last_topics = list(new_topics)
@@ -382,5 +413,5 @@ if __name__ == '__main__':
     try:
         arch()
     except rospy.ROSInterruptException:
-        print e
+        #print e
         pass

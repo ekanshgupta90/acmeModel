@@ -1,0 +1,19 @@
+import ROSFam.acme;
+ 
+System Turtlebot : ROSFam = new ROSFam extended with {
+
+    rule allNodeletsInGroup = invariant forall n :! ROSNodeletCompT in self.COMPONENTS | 
+        exists unique m :! ROSNodeManagerGroupT in self.GROUPS | 
+            contains(n, m.MEMBERS);
+    rule topicsMatch = invariant forall s :! TopicSubscribePortT in /self/COMPONENTS/PORTS:!TopicSubscribePortT | 
+        exists p :! TopicAdvertisePortT in /self/COMPONENTS/PORTS:!TopicAdvertisePortT | 
+            (s.topic == p.topic AND s.msg_type == p.msg_type);
+    rule onlyOneBusForTopicAndMsg = invariant forall t1,t2 :! TopicConnectorT in self.CONNECTORS | 
+        ((t1.msg_type == t2.msg_type AND t1.topic == t2.topic) <-> t1 == t2);
+    rule onlyOneBusForTopic = heuristic forall t1,t2 :! TopicConnectorT in self.CONNECTORS | 
+        (t1.topic == t2.topic) <-> t1 == t2;
+    rule noDuplicateNodes = invariant forall n2 :! ROSNodeCompT in self.COMPONENTS | 
+        forall n1 :! ROSNodeCompT in self.COMPONENTS | 
+            (n1.name == n2.name) <-> n1 == n2;
+}
+

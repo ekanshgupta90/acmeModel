@@ -1,0 +1,96 @@
+import ROSFam.acme;
+ 
+System Turtlebot : ROSFam = new ROSFam extended with {
+
+    Component __gazebonode : ROSNodeCompT = new ROSNodeCompT extended with {
+
+        Property name : string = "/gazebonodenode";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __robot_state_publishernode : ROSNodeCompT = new ROSNodeCompT extended with {
+
+        Property name : string = "/robot_state_publishernodenode";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __handler_30176_1479715999825node : ROSNodeCompT = new ROSNodeCompT extended with {
+
+        Property name : string = "/handler_30176_1479715999825nodenode";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __ig_action_servernode : ROSNodeCompT = new ROSNodeCompT extended with {
+
+        Property name : string = "/ig_action_servernodenode";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __mobile_base_nodelet_managernode : ROSNodeCompT = new ROSNodeCompT extended with {
+
+        Property name : string = "/mobile_base_nodelet_managernodenode";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __rosoutnode : ROSNodeCompT = new ROSNodeCompT extended with {
+
+        Property name : string = "/rosoutnodenode";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    Component __laserscan_nodelet_managernode : ROSNodeCompT = new ROSNodeCompT extended with {
+
+        Property name : string = "/laserscan_nodelet_managernodenode";
+        rule noServiceCallToSelf = invariant forall req :! ServiceClientPortT in self.PORTS | 
+             ! exists resp :! ServiceProviderPortT in self.PORTS | 
+                connected(req, resp);
+        rule noActionCalLToSelf = invariant forall req :! ActionClientPortT in self.PORTS | 
+             ! exists resp :! ActionServerPortT in self.PORTS | 
+                connected(req, resp);
+
+    }
+    rule allNodeletsInGroup = invariant forall n :! ROSNodeletCompT in self.COMPONENTS | 
+        exists unique m :! ROSNodeManagerGroupT in self.GROUPS | 
+            contains(n, m.MEMBERS);
+    rule topicsMatch = invariant forall s :! TopicSubscribePortT in /self/COMPONENTS/PORTS:!TopicSubscribePortT | 
+        exists p :! TopicAdvertisePortT in /self/COMPONENTS/PORTS:!TopicAdvertisePortT | 
+            (s.topic == p.topic AND s.msg_type == p.msg_type);
+    rule onlyOneBusForTopicAndMsg = invariant forall t1,t2 :! TopicConnectorT in self.CONNECTORS | 
+        ((t1.msg_type == t2.msg_type AND t1.topic == t2.topic) <-> t1 == t2);
+    rule onlyOneBusForTopic = heuristic forall t1,t2 :! TopicConnectorT in self.CONNECTORS | 
+        (t1.topic == t2.topic) <-> t1 == t2;
+    rule noDuplicateNodes = invariant forall n2 :! ROSNodeCompT in self.COMPONENTS | 
+        forall n1 :! ROSNodeCompT in self.COMPONENTS | 
+            (n1.name == n2.name) <-> n1 == n2;
+}
+
